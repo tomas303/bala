@@ -1,0 +1,88 @@
+object MainForm: TMainForm
+  Left = 372
+  Height = 240
+  Top = 172
+  Width = 643
+  Caption = 'MainForm'
+  ClientHeight = 221
+  ClientWidth = 643
+  Menu = mnMain
+  LCLVersion = '1.7'
+  object pgContainers: TPageControl
+    Left = 0
+    Height = 221
+    Top = 0
+    Width = 643
+    Align = alClient
+    TabOrder = 0
+    Options = [nboKeyboardTabSwitch]
+  end
+  object alMain: TActionList
+    left = 40
+    top = 24
+    object acParameterGroups: TAction
+      Category = 'Settings'
+      Caption = '&Parameter groups'
+      OnExecute = acParameterGroupsExecute
+    end
+    object acEnvVariableGroups: TAction
+      Category = 'Settings'
+      Caption = '&Environment variable groups'
+      OnExecute = acEnvVariableGroupsExecute
+    end
+    object acInterpreters: TAction
+      Category = 'Settings'
+      Caption = '&Interpreters'
+      OnExecute = acInterpretersExecute
+    end
+    object acSources: TAction
+      Category = 'Settings'
+      Caption = '&Scritps'
+      OnExecute = acSourcesExecute
+    end
+    object acConfigurations: TAction
+      Category = 'Settings'
+      Caption = '&Configurations'
+      OnExecute = acConfigurationsExecute
+    end
+    object acNewRunContainer: TAction
+      Category = 'RunContainers'
+      Caption = 'New runner'
+      OnExecute = acNewRunContainerExecute
+    end
+  end
+  object mnMain: TMainMenu
+    left = 104
+    top = 24
+    object miSettings: TMenuItem
+      Caption = '&Settings'
+      object miEnvVariableGroups: TMenuItem
+        Action = acEnvVariableGroups
+        OnClick = acEnvVariableGroupsExecute
+      end
+      object miParameterGroups: TMenuItem
+        Action = acParameterGroups
+        OnClick = acParameterGroupsExecute
+      end
+      object miSources: TMenuItem
+        Action = acSources
+        OnClick = acSourcesExecute
+      end
+      object miConfigurations: TMenuItem
+        Action = acConfigurations
+        OnClick = acConfigurationsExecute
+      end
+      object miInterpreters: TMenuItem
+        Action = acInterpreters
+        OnClick = acInterpretersExecute
+      end
+    end
+    object miContainers: TMenuItem
+      Caption = '&Containers'
+      object miAddContainer: TMenuItem
+        Action = acNewRunContainer
+        OnClick = acNewRunContainerExecute
+      end
+    end
+  end
+end
