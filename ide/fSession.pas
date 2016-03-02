@@ -135,9 +135,10 @@ end;
 
 procedure TSessionForm.Pin(const AParent: TWinControl);
 begin
-  Parent := AParent;
-  Align := alClient;
-  Visible := True;
+  while ControlCount > 0 do
+  begin
+    Controls[ControlCount - 1].Parent := AParent;
+  end;
 end;
 
 procedure TSessionForm.Bind(const AContainer: IContainer);
