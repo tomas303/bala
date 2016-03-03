@@ -90,6 +90,8 @@ procedure TKicker.ShutDown;
 begin
   fMainForm.ShutDown;
   Store.Close;
+  fMainForm := nil;  //otherwisw AV - this is not automaticly freed interface object
+  Store := nil;
 end;
 
 function TKicker.GetMainForm: TForm;
