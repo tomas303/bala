@@ -12,9 +12,9 @@ object SessionForm: TSessionForm
     Height = 541
     Top = 0
     Width = 230
-    ActivePage = tabEnvironment
+    ActivePage = tabLinks
     Align = alRight
-    TabIndex = 0
+    TabIndex = 2
     TabOrder = 0
     object tabEnvironment: TTabSheet
       Caption = 'Environment'
@@ -74,6 +74,122 @@ object SessionForm: TSessionForm
         Width = 222
         Align = alClient
         TabOrder = 2
+      end
+    end
+    object tabLinks: TTabSheet
+      Caption = 'Links'
+      ClientHeight = 504
+      ClientWidth = 222
+      object SourceLink_bind: TComboBox
+        Left = 8
+        Height = 21
+        Top = 32
+        Width = 208
+        Anchors = [akTop, akLeft, akRight]
+        ItemHeight = 0
+        TabOrder = 0
+        Text = 'SourceLink_bind'
+      end
+      object InterpreterLink_bind: TComboBox
+        Left = 16
+        Height = 21
+        Top = 136
+        Width = 192
+        Anchors = [akTop, akLeft, akRight]
+        ItemHeight = 0
+        TabOrder = 1
+        Text = 'InterpreterLink_bind'
+      end
+      object ConfigurationLink_bind: TComboBox
+        Left = 16
+        Height = 21
+        Top = 248
+        Width = 192
+        Anchors = [akTop, akLeft, akRight]
+        ItemHeight = 0
+        TabOrder = 2
+        Text = 'ConfigurationLink_bind'
+      end
+      object lblSourceLink: TLabel
+        Left = 8
+        Height = 15
+        Top = 8
+        Width = 67
+        Caption = 'Source link'
+        ParentColor = False
+      end
+      object lblInterpreterLink: TLabel
+        Left = 16
+        Height = 15
+        Top = 112
+        Width = 91
+        Caption = 'Interpreter link'
+        ParentColor = False
+      end
+      object lblConfigurationLink: TLabel
+        Left = 16
+        Height = 15
+        Top = 224
+        Width = 107
+        Caption = 'Configuration link'
+        ParentColor = False
+      end
+      object btnTakeSource: TButton
+        Left = 8
+        Height = 25
+        Top = 64
+        Width = 75
+        Caption = '< Take'
+        OnClick = btnTakeSourceClick
+        TabOrder = 3
+      end
+      object btnTakeInterpreter: TButton
+        Left = 16
+        Height = 25
+        Top = 168
+        Width = 75
+        Caption = '< Take'
+        OnClick = btnTakeInterpreterClick
+        TabOrder = 4
+      end
+      object btnTakeConfiguration: TButton
+        Left = 16
+        Height = 25
+        Top = 280
+        Width = 75
+        Caption = '< Take'
+        OnClick = btnTakeConfigurationClick
+        TabOrder = 5
+      end
+      object btnReturnSource: TButton
+        Left = 141
+        Height = 25
+        Top = 64
+        Width = 75
+        Anchors = [akTop, akRight]
+        Caption = 'Return >'
+        OnClick = btnReturnSourceClick
+        TabOrder = 6
+      end
+      object btnReturnInterpreter: TButton
+        Left = 141
+        Height = 25
+        Top = 168
+        Width = 75
+        Anchors = [akTop, akRight]
+        Caption = 'Return >'
+        OnClick = btnReturnInterpreterClick
+        TabOrder = 7
+      end
+      object btnReturnConfiguration: TButton
+        Left = 141
+        Height = 25
+        Top = 280
+        Width = 75
+        Anchors = [akTop, akRight]
+        Caption = 'Return >'
+        OnClick = btnReturnConfigurationClick
+        TabOrder = 8
       end
     end
   end

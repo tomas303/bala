@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, SynEdit, Forms, Controls, Graphics, Dialogs,
   StdCtrls, Menus, ExtCtrls, ActnList, ComCtrls, Grids, tvl_ibindings,
-  Containers;
+  Containers, Sessions;
 
 type
 
@@ -19,6 +19,18 @@ type
     acContinue: TAction;
     acTerminate: TAction;
     alRun: TActionList;
+    btnReturnInterpreter: TButton;
+    btnReturnConfiguration: TButton;
+    btnTakeSource: TButton;
+    btnTakeInterpreter: TButton;
+    btnTakeConfiguration: TButton;
+    btnReturnSource: TButton;
+    lblSourceLink: TLabel;
+    lblInterpreterLink: TLabel;
+    lblConfigurationLink: TLabel;
+    SourceLink_bind: TComboBox;
+    InterpreterLink_bind: TComboBox;
+    ConfigurationLink_bind: TComboBox;
     edExitCode: TEdit;
     EnvVariableGroups_bind: TStringGrid;
     EnvVariables_bind: TStringGrid;
@@ -44,6 +56,7 @@ type
     splOutput: TSplitter;
     tabEnvironment: TTabSheet;
     tabParameters: TTabSheet;
+    tabLinks: TTabSheet;
     tbRun: TToolBar;
     tbStart: TToolButton;
     tbPause: TToolButton;
@@ -53,6 +66,12 @@ type
     procedure acStartExecute(Sender: TObject);
     procedure acTerminateExecute(Sender: TObject);
     procedure alRunUpdate(AAction: TBasicAction; var Handled: Boolean);
+    procedure btnReturnConfigurationClick(Sender: TObject);
+    procedure btnReturnInterpreterClick(Sender: TObject);
+    procedure btnReturnSourceClick(Sender: TObject);
+    procedure btnTakeConfigurationClick(Sender: TObject);
+    procedure btnTakeInterpreterClick(Sender: TObject);
+    procedure btnTakeSourceClick(Sender: TObject);
   private
     fBinder: IRBDataBinder;
     fBehaveBinder: IRBBehavioralBinder;
@@ -106,6 +125,60 @@ begin
   Output_bind.ReadOnly := True;
 end;
 
+procedure TSessionForm.btnReturnConfigurationClick(Sender: TObject);
+var
+  mLinks: ISessionLinks;
+begin
+  mLinks := RunContainer.Session.ItemByName['SessionLinks'].AsInterface as ISessionLinks;
+  mLinks.PutToConfiguration;
+  Binder.DataChange;
+end;
+
+procedure TSessionForm.btnReturnInterpreterClick(Sender: TObject);
+var
+  mLinks: ISessionLinks;
+begin
+  mLinks := RunContainer.Session.ItemByName['SessionLinks'].AsInterface as ISessionLinks;
+  mLinks.PutToInterpreter;
+  Binder.DataChange;
+end;
+
+procedure TSessionForm.btnReturnSourceClick(Sender: TObject);
+var
+  mLinks: ISessionLinks;
+begin
+  mLinks := RunContainer.Session.ItemByName['SessionLinks'].AsInterface as ISessionLinks;
+  mLinks.PutToSource;
+  Binder.DataChange;
+end;
+
+procedure TSessionForm.btnTakeConfigurationClick(Sender: TObject);
+var
+  mLinks: ISessionLinks;
+begin
+  mLinks := RunContainer.Session.ItemByName['SessionLinks'].AsInterface as ISessionLinks;
+  mLinks.GetFromConfiguration;
+  Binder.DataChange;
+end;
+
+procedure TSessionForm.btnTakeInterpreterClick(Sender: TObject);
+var
+  mLinks: ISessionLinks;
+begin
+  mLinks := RunContainer.Session.ItemByName['SessionLinks'].AsInterface as ISessionLinks;
+  mLinks.GetFromInterpreter;
+  Binder.DataChange;
+end;
+
+procedure TSessionForm.btnTakeSourceClick(Sender: TObject);
+var
+  mLinks: ISessionLinks;
+begin
+  mLinks := RunContainer.Session.ItemByName['SessionLinks'].AsInterface as ISessionLinks;
+  mLinks.GetFromSource;
+  Binder.DataChange;
+end;
+
 procedure TSessionForm.acPauseExecute(Sender: TObject);
 begin
   RunContainer.Pause;
@@ -137,6 +210,7 @@ procedure TSessionForm.Pin(const AParent: TWinControl);
 begin
   while ControlCount > 0 do
   begin
+    Controls[ControlCount - 1].Tag:=-1;
     Controls[ControlCount - 1].Parent := AParent;
   end;
 end;

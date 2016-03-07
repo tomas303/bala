@@ -17,7 +17,7 @@ type
     fName: string;
     fSource: IPersistRef<TSource>;
     fInterpreter: IPersistRef<TInterpreter>;
-    fEnvVariableGroups: IPersistManyRefs<TEnvVariableGroup>;
+    fEnvVariableGroups: IPersistManyRefsEnvVariableGroup;
     fParameterGroups: IPersistManyRefs<TParameterGroup>;
     fEnvVariables: IPersistManyTEnvVariable;
     fParameters: IPersistManyTParameter;
@@ -27,7 +27,7 @@ type
     property Name: string read fName write fName;
     property Source: IPersistRef<TSource> read fSource write fSource;
     property Interpreter: IPersistRef<TInterpreter> read fInterpreter write fInterpreter;
-    property EnvVariableGroups: IPersistManyRefs<TEnvVariableGroup> read fEnvVariableGroups;
+    property EnvVariableGroups: IPersistManyRefsEnvVariableGroup read fEnvVariableGroups;
     property ParameterGroups: IPersistManyRefs<TParameterGroup> read fParameterGroups;
     property EnvVariables: IPersistManyTEnvVariable read fEnvVariables;
     property Parameters: IPersistManyTParameter read fParameters;
@@ -42,7 +42,7 @@ begin
   inherited AfterConstruction;
   fSource := TPersistRef<TSource>.Create;
   fInterpreter := TPersistRef<TInterpreter>.Create;
-  fEnvVariableGroups := TPersistManyRefs<TEnvVariableGroup>.Create;
+  fEnvVariableGroups := TPersistManyRefsEnvVariableGroup.Create;
   fParameterGroups := TPersistManyRefs<TParameterGroup>.Create;
   fEnvVariables := TPersistManyTEnvVariable.Create;
   fParameters := TPersistManyTParameter.Create;

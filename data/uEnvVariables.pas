@@ -5,7 +5,7 @@ unit uEnvVariables;
 interface
 
 uses
-  Classes, SysUtils, trl_ipersist, trl_upersist;
+  Classes, SysUtils, trl_ipersist, trl_upersist, trl_upersiststore;
 
 type
 
@@ -42,6 +42,13 @@ type
   published
     property Name: string read fName write fName;
     property EnvVariables: IPersistManyTEnvVariable read fEnvVariables;
+  end;
+
+  IPersistManyRefsEnvVariableGroup = interface(IPersistManyRefs<TEnvVariableGroup>)
+  ['{6412ED2C-E237-47E7-A3AC-AAC0CC35F8EE}']
+  end;
+
+  TPersistManyRefsEnvVariableGroup = class(TPersistManyRefs<TEnvVariableGroup>, IPersistManyRefsEnvVariableGroup)
   end;
 
 implementation
