@@ -64,6 +64,7 @@ type
     procedure AfterConstruction; override;
     procedure BeforeDestruction; override;
     function Add(const AID: string = ''): IContainer;
+    procedure Delete(AIndex:  integer);
     procedure Load;
     procedure Save;
     property Containers[AIndex: integer]: IContainer read GetContainers;
@@ -242,6 +243,12 @@ begin
   Result := AppFactory.Locate(IContainer, AID);
   Result.Bind;
   fList.Add(Result);
+end;
+
+procedure TContainers.Delete(AIndex: integer);
+begin
+  Store.Delete(Containers[AIndex].Session);
+  fList.Delete(AIndex);
 end;
 
 procedure TContainers.Load;

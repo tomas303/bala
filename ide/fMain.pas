@@ -20,7 +20,9 @@ type
     acConfigurations: TAction;
     acSources: TAction;
     acNewRunContainer: TAction;
+    acDeleteRunContainter: TAction;
     alMain: TActionList;
+    miDeleteContainer: TMenuItem;
     miSettings: TMenuItem;
     miContainers: TMenuItem;
     miAddContainer: TMenuItem;
@@ -31,6 +33,7 @@ type
     miParameterGroups: TMenuItem;
     miSources: TMenuItem;
     pgContainers: TPageControl;
+    procedure acDeleteRunContainterExecute(Sender: TObject);
     procedure acEnvVariableGroupsExecute(Sender: TObject);
     procedure acInterpretersExecute(Sender: TObject);
     procedure acNewRunContainerExecute(Sender: TObject);
@@ -108,6 +111,12 @@ end;
 procedure TMainForm.acEnvVariableGroupsExecute(Sender: TObject);
 begin
   EnvVariableGroups.List;
+end;
+
+procedure TMainForm.acDeleteRunContainterExecute(Sender: TObject);
+begin
+  Containers.Delete(pgContainers.ActivePage.Tag);
+  pgContainers.ActivePage.Free;
 end;
 
 procedure TMainForm.acInterpretersExecute(Sender: TObject);

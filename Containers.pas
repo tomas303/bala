@@ -46,6 +46,7 @@ type
     function GetContainers(AIndex:  integer): IContainer;
     function GetCount: integer;
     function Add(const AID: string = ''): IContainer;
+    procedure Delete(AIndex:  integer);
     procedure Load;
     procedure Save;
     property Containers[AIndex:  integer]: IContainer read GetContainers; default;

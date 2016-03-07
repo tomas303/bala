@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 372
+  Left = 438
   Height = 240
-  Top = 172
+  Top = 193
   Width = 643
   Caption = 'MainForm'
   ClientHeight = 221
@@ -50,6 +50,11 @@ object MainForm: TMainForm
       Caption = 'New runner'
       OnExecute = acNewRunContainerExecute
     end
+    object acDeleteRunContainter: TAction
+      Category = 'RunContainers'
+      Caption = '&Delete runner'
+      OnExecute = acDeleteRunContainterExecute
+    end
   end
   object mnMain: TMainMenu
     left = 104
@@ -82,6 +87,10 @@ object MainForm: TMainForm
       object miAddContainer: TMenuItem
         Action = acNewRunContainer
         OnClick = acNewRunContainerExecute
+      end
+      object miDeleteContainer: TMenuItem
+        Action = acDeleteRunContainter
+        OnClick = acDeleteRunContainterExecute
       end
     end
   end
