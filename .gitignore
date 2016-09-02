@@ -11,3 +11,6 @@ lib/
 *.lps
 *.xml
 *.bak
+*.dbg
+*.lpg
+/bala
