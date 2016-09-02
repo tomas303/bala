@@ -20,7 +20,7 @@ type
 
   { IPersistManyTParameter }
 
-  IPersistManyTParameter = interface(IPersistMany<TParameter>)
+  IPersistManyTParameter = interface(IPersistManyItems<TParameter>)
   ['{71F10F6B-F414-4E64-84C4-D6B41BA8AA5D}']
   end;
 

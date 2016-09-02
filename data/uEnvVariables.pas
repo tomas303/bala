@@ -22,7 +22,7 @@ type
 
   { IPersistManyTEnvVariable }
 
-  IPersistManyTEnvVariable = interface(IPersistMany<TEnvVariable>)
+  IPersistManyTEnvVariable = interface(IPersistManyItems<TEnvVariable>)
   ['{979097AE-63D4-4897-AD80-71388EB324C2}']
   end;
 
