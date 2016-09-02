@@ -35,7 +35,7 @@ type
     //IGUIKicker
     procedure StartUp;
     procedure ShutDown;
-    function GetMainForm: TForm;
+    function GetMainForm: IMainForm;
   published
     property MainForm: IMainForm read fMainForm write fMainForm;
     property Store: IPersistStore read fStore write fStore;
@@ -94,9 +94,9 @@ begin
   Store := nil;
 end;
 
-function TKicker.GetMainForm: TForm;
+function TKicker.GetMainForm: IMainForm;
 begin
-  Result := fMainForm.MainForm;
+  Result := fMainForm;
 end;
 
 { TApp }

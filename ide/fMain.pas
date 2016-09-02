@@ -52,6 +52,7 @@ type
     procedure StartUp;
     procedure ShutDown;
     function GetMainForm: TForm;
+    procedure ConnectCloseHandler(OnCloseHandler: TCloseEvent);
   published
     property ParameterGroups: IListData read fParameterGroups write fParameterGroups;
     property EnvVariableGroups: IListData read fEnvVariableGroups write fEnvVariableGroups;
@@ -106,6 +107,11 @@ end;
 function TMainForm.GetMainForm: TForm;
 begin
   Result := Self;
+end;
+
+procedure TMainForm.ConnectCloseHandler(OnCloseHandler: TCloseEvent);
+begin
+  AddHandlerClose(OnCloseHandler);
 end;
 
 procedure TMainForm.acEnvVariableGroupsExecute(Sender: TObject);
