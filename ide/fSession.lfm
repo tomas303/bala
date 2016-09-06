@@ -1,7 +1,7 @@
 object SessionForm: TSessionForm
-  Left = 438
+  Left = 664
   Height = 541
-  Top = 197
+  Top = 114
   Width = 895
   Caption = 'Session'
   ClientHeight = 541
@@ -12,35 +12,27 @@ object SessionForm: TSessionForm
     Height = 541
     Top = 0
     Width = 230
-    ActivePage = tabEnvironment
+    ActivePage = tabParameters
     Align = alRight
-    TabIndex = 0
+    TabIndex = 1
     TabOrder = 0
     object tabEnvironment: TTabSheet
       Caption = 'Environment'
-      ClientHeight = 504
+      ClientHeight = 511
       ClientWidth = 222
-      object EnvVariableGroups_bind: TStringGrid
-        Left = 0
-        Height = 145
-        Top = 0
-        Width = 222
-        Align = alTop
-        TabOrder = 0
-      end
       object EnvVariables_bind: TStringGrid
         Left = 0
-        Height = 354
-        Top = 150
+        Height = 506
+        Top = 5
         Width = 222
         Align = alClient
-        TabOrder = 1
+        TabOrder = 0
       end
       object splEnvironment: TSplitter
         Cursor = crVSplit
         Left = 0
         Height = 5
-        Top = 145
+        Top = 0
         Width = 222
         Align = alTop
         ResizeAnchor = akTop
@@ -48,148 +40,24 @@ object SessionForm: TSessionForm
     end
     object tabParameters: TTabSheet
       Caption = 'Parameters'
-      ClientHeight = 504
+      ClientHeight = 511
       ClientWidth = 222
       object splParameters: TSplitter
         Cursor = crVSplit
         Left = 0
         Height = 5
-        Top = 145
+        Top = 0
         Width = 222
         Align = alTop
         ResizeAnchor = akTop
       end
-      object ParameterGroups_bind: TStringGrid
-        Left = 0
-        Height = 145
-        Top = 0
-        Width = 222
-        Align = alTop
-        TabOrder = 1
-      end
       object Parameters_bind: TStringGrid
         Left = 0
-        Height = 354
-        Top = 150
+        Height = 506
+        Top = 5
         Width = 222
         Align = alClient
-        TabOrder = 2
-      end
-    end
-    object tabLinks: TTabSheet
-      Caption = 'Links'
-      ClientHeight = 504
-      ClientWidth = 222
-      object SourceLink_bind: TComboBox
-        Left = 8
-        Height = 21
-        Top = 32
-        Width = 208
-        Anchors = [akTop, akLeft, akRight]
-        ItemHeight = 0
-        TabOrder = 0
-        Text = 'SourceLink_bind'
-      end
-      object InterpreterLink_bind: TComboBox
-        Left = 16
-        Height = 21
-        Top = 136
-        Width = 192
-        Anchors = [akTop, akLeft, akRight]
-        ItemHeight = 0
         TabOrder = 1
-        Text = 'InterpreterLink_bind'
-      end
-      object ConfigurationLink_bind: TComboBox
-        Left = 16
-        Height = 21
-        Top = 248
-        Width = 192
-        Anchors = [akTop, akLeft, akRight]
-        ItemHeight = 0
-        TabOrder = 2
-        Text = 'ConfigurationLink_bind'
-      end
-      object lblSourceLink: TLabel
-        Left = 8
-        Height = 15
-        Top = 8
-        Width = 67
-        Caption = 'Source link'
-        ParentColor = False
-      end
-      object lblInterpreterLink: TLabel
-        Left = 16
-        Height = 15
-        Top = 112
-        Width = 91
-        Caption = 'Interpreter link'
-        ParentColor = False
-      end
-      object lblConfigurationLink: TLabel
-        Left = 16
-        Height = 15
-        Top = 224
-        Width = 107
-        Caption = 'Configuration link'
-        ParentColor = False
-      end
-      object btnTakeSource: TButton
-        Left = 8
-        Height = 25
-        Top = 64
-        Width = 75
-        Caption = '< Take'
-        OnClick = btnTakeSourceClick
-        TabOrder = 3
-      end
-      object btnTakeInterpreter: TButton
-        Left = 16
-        Height = 25
-        Top = 168
-        Width = 75
-        Caption = '< Take'
-        OnClick = btnTakeInterpreterClick
-        TabOrder = 4
-      end
-      object btnTakeConfiguration: TButton
-        Left = 16
-        Height = 25
-        Top = 280
-        Width = 75
-        Caption = '< Take'
-        OnClick = btnTakeConfigurationClick
-        TabOrder = 5
-      end
-      object btnReturnSource: TButton
-        Left = 141
-        Height = 25
-        Top = 64
-        Width = 75
-        Anchors = [akTop, akRight]
-        Caption = 'Return >'
-        OnClick = btnReturnSourceClick
-        TabOrder = 6
-      end
-      object btnReturnInterpreter: TButton
-        Left = 141
-        Height = 25
-        Top = 168
-        Width = 75
-        Anchors = [akTop, akRight]
-        Caption = 'Return >'
-        OnClick = btnReturnInterpreterClick
-        TabOrder = 7
-      end
-      object btnReturnConfiguration: TButton
-        Left = 141
-        Height = 25
-        Top = 280
-        Width = 75
-        Anchors = [akTop, akRight]
-        Caption = 'Return >'
-        OnClick = btnReturnConfigurationClick
-        TabOrder = 8
       end
     end
   end
@@ -224,8 +92,8 @@ object SessionForm: TSessionForm
       TabOrder = 1
       inline Source_bind: TSynEdit
         Left = 80
-        Height = 206
-        Top = 72
+        Height = 174
+        Top = 104
         Width = 568
         Anchors = [akTop, akLeft, akRight, akBottom]
         Font.Height = 13
@@ -234,7 +102,7 @@ object SessionForm: TSessionForm
         Font.Quality = fqNonAntialiased
         ParentColor = False
         ParentFont = False
-        TabOrder = 0
+        TabOrder = 2
         Gutter.Width = 57
         Gutter.MouseActions = <>
         RightGutter.Width = 0
@@ -723,8 +591,8 @@ object SessionForm: TSessionForm
       end
       object Interpreter_bind: TEdit
         Left = 80
-        Height = 21
-        Top = 40
+        Height = 23
+        Top = 72
         Width = 568
         Anchors = [akTop, akLeft, akRight]
         TabOrder = 1
@@ -733,16 +601,16 @@ object SessionForm: TSessionForm
       object lblInterpreter: TLabel
         Left = 8
         Height = 15
-        Top = 40
-        Width = 66
+        Top = 72
+        Width = 67
         Caption = 'Interpreter'
         ParentColor = False
       end
       object lblSource: TLabel
         Left = 8
         Height = 15
-        Top = 72
-        Width = 42
+        Top = 104
+        Width = 43
         Caption = 'Source'
         ParentColor = False
       end
@@ -753,7 +621,7 @@ object SessionForm: TSessionForm
         Width = 656
         Caption = 'tbRun'
         Images = ilRun1
-        TabOrder = 2
+        TabOrder = 3
         object tbStart: TToolButton
           Left = 1
           Top = 2
@@ -769,6 +637,28 @@ object SessionForm: TSessionForm
           Top = 2
           Action = acTerminate
         end
+        object tbSave: TToolButton
+          Left = 70
+          Top = 2
+          Action = acSave
+        end
+      end
+      object lblName: TLabel
+        Left = 8
+        Height = 15
+        Top = 40
+        Width = 37
+        Caption = 'Name'
+        ParentColor = False
+      end
+      object Name_bind: TEdit
+        Left = 80
+        Height = 23
+        Top = 40
+        Width = 568
+        Anchors = [akTop, akLeft, akRight]
+        TabOrder = 0
+        Text = 'Name_bind'
       end
     end
     object pnOutput: TPanel
@@ -1291,17 +1181,17 @@ object SessionForm: TSessionForm
         TabOrder = 1
         object edExitCode: TEdit
           Left = 568
-          Height = 21
+          Height = 23
           Top = 8
           Width = 80
           Anchors = [akTop, akRight]
           TabOrder = 0
         end
         object lblExitCode: TLabel
-          Left = 504
+          Left = 503
           Height = 15
           Top = 8
-          Width = 56
+          Width = 57
           Anchors = [akTop, akRight]
           Caption = 'Exit code'
           ParentColor = False
@@ -1341,6 +1231,11 @@ object SessionForm: TSessionForm
       Caption = 'Terminate'
       ImageIndex = 1
       OnExecute = acTerminateExecute
+    end
+    object acSave: TAction
+      Caption = 'Save'
+      ImageIndex = 3
+      OnExecute = acSaveExecute
     end
   end
   object ilRun: TImageList
@@ -1740,7 +1635,7 @@ object SessionForm: TSessionForm
     left = 40
     top = 120
     Bitmap = {
-      4C69030000001000000010000000000000000000000004733AFF2D8859FF859C
+      4C69040000001000000010000000000000000000000004733AFF2D8859FF859C
       90FF000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000004733AFFA4D9BEFF3D93
       66FF5F8873FF0000000000000000000000000000000000000000000000000000
@@ -1836,7 +1731,39 @@ object SessionForm: TSessionForm
       76FFCDA585FF9F683EFF98705000987050009F683EFFC99C76FFCDA585FF9F68
       3EFF000000000000000000000000EEEEEE00EEEEEE00EEEEEE00987050FFA465
       34FFA46534FF987050FFFBE3BC00FBE3BC00987050FFA46534FFA46534FF9870
-      50FF000000000000000000000000
+      50FF000000000000000000000000BC6B3671BC6B3690BC6B36CCBC6B36EEBC6B
+      36FABB6B36FEBB6B36FFBB6A36FFBB6A36FFBC6C39FFBD6E3BFFBB6D3AFFBB6B
+      38EFBB703ECBB6693554FFFFFF00BC6B369BF6E0D1FFF7E0D1FFFEFBF8FFFEFB
+      F7FFFDF9F6FFFCF5F0FFFAF0EAFFFBF2EDFFFDF9F6FFFDFAF7FFFBF1EBFFF8E9
+      DFFEECD0BDFBC9895EECB5693563BC6B36D8F6DFD1FFE9AA80FFFEFAF6FFFDFA
+      F6FFC88C64FFFBF3EEFFFBF1EAFFFCF6F2FFFEFBF8FFFCF6F1FFF9ECE2FFF8E7
+      DBFFEED0BAFFECD0BDFFBB703EF8BC6B36F0F6DFD0FFE8A87EFFFCF6F1FFFCF6
+      F1FFC88C64FFFAF1E9FFFBF4EEFFFDFAF7FFFDF9F6FFFAF0E8FFF8E8DDFFF7E6
+      DBFFE1A37AFFEFD5C3FFB76935FEBC6B36FAF5DDCCFFE7A87EFFFAF0E8FFFAF0
+      E8FFC98D66FFFAF0E9FFFDF8F3FFFEFAF8FFFCF4EFFFF9E9DFFFF7E7DBFFF7E5
+      D9FFE0A278FFE7C2A9FFB66835FFBB6B36FEF4DCC9FFE7A77DFFF9ECE1FFF9EC
+      E1FFF9EDE3FFFCF4EEFFFDFAF7FFFDF7F3FFFAEDE5FFF7E7DBFFF7E5D9FFF6E5
+      D8FFDEA077FFE4BEA4FFB46734FFBB6B36FFF4D9C7FFE6A67DFFC88C64FFC98D
+      65FFC98E67FFCB926CFFCB926DFFCA9069FFC88C65FFC88C64FFC88C64FFC88C
+      64FFDA9C74FFE1BA9FFFB36634FFBB6A36FFF2D8C5FFE3A47BFFE3A37AFFE3A4
+      7AFFE2A47BFFE2A37BFFE1A37BFFE1A279FFDFA077FFDE9F76FFDD9E74FFDB9C
+      72FFDC9D74FFDDB59AFFB16534FFBB6A36FFF2D5C2FFE3A37AFFE3A37AFFE2A3
+      7BFFE2A37BFFE2A47BFFE1A279FFE0A178FFDEA077FFDE9E75FFDC9D74FFDA9B
+      73FFD99B73FFDAB095FFAF6433FFBB6A36FFF0D2BEFFE2A37AFFE2A37AFFE1A3
+      7AFFE2A37BFFE1A37BFFE0A178FFDE9F77FFDD9F76FFDC9D74FFD99B72FFD899
+      71FFD69970FFD5AB8EFFAD6333FFBA6A36FFEFD0BBFFE2A27AFFFEFBF8FFFEFB
+      F8FFFEFBF8FFFEFBF8FFFEFBF8FFFEFBF8FFFEFBF8FFFEFBF8FFFEFBF8FFFEFB
+      F8FFD3966DFFD2A78AFFAB6232FFBB6B38FFEFCEB8FFE1A279FFFEFAF7FF62C0
+      88FF62C088FF62C088FF62C088FF62C088FF62C088FF62C088FF62C088FFFDF9
+      F6FFCF936AFFCEA384FFAA6132FFBB6C38FFEECCB6FFE1A27AFFFEFAF7FFBFDC
+      C2FFBFDCC2FFBFDCC2FFBFDCC2FFBFDCC2FFBFDCC2FFBFDCC2FFBFDCC2FFFDF9
+      F6FFCD9068FFCC9E81FFA86132FFBA6B37FEEDCAB3FFE0A27AFFFEFAF7FF62C0
+      88FF62C088FF62C088FF62C088FF62C088FF62C088FF62C088FF62C088FFFDF9
+      F6FFCA8D65FFC99B7CFFA76031FEBA6A35DEEBC6ADFFEAC5ADFFFEFBF8FFFEFB
+      F8FFFEFBF8FFFEFBF8FFFEFBF8FFFEFBF8FFFEFBF8FFFEFBF8FFFEFBF8FFFEFB
+      F8FFC89A7CFFC79879FFA76031EDBA6A3600B96935B5B86935EEB76835FFB568
+      35FFB46734FFB26634FFB06533FFAE6433FFAC6332FFAA6232FFA96132FFA860
+      31FFA76031FEA66031F1A86131C4
     }
   end
 end

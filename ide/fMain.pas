@@ -6,22 +6,23 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ActnList,
-  Menus, ComCtrls, tvl_iedit, tvl_ibindings, trl_ipersist, trl_irttibroker,
-  trl_idifactory, Containers;
+  Menus, ComCtrls, ExtCtrls, StdCtrls, tvl_iedit, tvl_ibindings, trl_ipersist,
+  trl_irttibroker, trl_idifactory, Containers;
 
 type
 
   { TMainForm }
 
   TMainForm = class(TForm, IMainForm)
-    acParameterGroups: TAction;
-    acEnvVariableGroups: TAction;
-    acInterpreters: TAction;
-    acConfigurations: TAction;
-    acSources: TAction;
     acNewRunContainer: TAction;
     acDeleteRunContainter: TAction;
+    acOpenSession: TAction;
+    acNewSession: TAction;
+    acDeleteSession: TAction;
     alMain: TActionList;
+    btnAdd: TButton;
+    btnDelete: TButton;
+    lbSessions: TListBox;
     miDeleteContainer: TMenuItem;
     miSettings: TMenuItem;
     miContainers: TMenuItem;
@@ -32,34 +33,38 @@ type
     mnMain: TMainMenu;
     miParameterGroups: TMenuItem;
     miSources: TMenuItem;
+    paSessionsNavigaton: TPanel;
+    paSessions: TPanel;
     pgContainers: TPageControl;
     procedure acDeleteRunContainterExecute(Sender: TObject);
-    procedure acEnvVariableGroupsExecute(Sender: TObject);
-    procedure acInterpretersExecute(Sender: TObject);
+    procedure acDeleteSessionExecute(Sender: TObject);
     procedure acNewRunContainerExecute(Sender: TObject);
-    procedure acParameterGroupsExecute(Sender: TObject);
-    procedure acConfigurationsExecute(Sender: TObject);
-    procedure acSourcesExecute(Sender: TObject);
+    procedure acNewSessionExecute(Sender: TObject);
+    procedure acOpenSessionExecute(Sender: TObject);
+    procedure lbSessionsDblClick(Sender: TObject);
   private
-    fParameterGroups: IListData;
-    fEnvVariableGroups: IListData;
-    fInterpreters: IListData;
-    fSources: IListData;
-    fConfigurations: IListData;
     fRunContainers: IContainers;
+    fSessionsBinder: IRBTallyBinder;
+    fFactory: IPersistFactory;
+    fStore: IPersistStore;
+    fAppFactory: IDIFactory;
   protected
     //IMainForm
     procedure StartUp;
     procedure ShutDown;
     function GetMainForm: TForm;
     procedure ConnectCloseHandler(OnCloseHandler: TCloseEvent);
+  protected
+    function FindContainer(ASession: IRBData): IContainer;
+    function GetContainer(ASession: IRBData): IContainer;
+    function PinContainer(const AContainer: IContainer): integer;
+    function FindContainerTab(const AContainer: IContainer): integer;
   published
-    property ParameterGroups: IListData read fParameterGroups write fParameterGroups;
-    property EnvVariableGroups: IListData read fEnvVariableGroups write fEnvVariableGroups;
-    property Interpreters: IListData read fInterpreters write fInterpreters;
-    property Sources: IListData read fSources write fSources;
-    property Configurations: IListData read fConfigurations write fConfigurations;
     property Containers: IContainers read fRunContainers write fRunContainers;
+    property SessionsBinder: IRBTallyBinder read fSessionsBinder write fSessionsBinder;
+    property Factory: IPersistFactory read fFactory write fFactory;
+    property Store: IPersistStore read fStore write fStore;
+    property AppFactory: IDIFactory read fAppFactory write fAppFactory;
   end;
 
 implementation
@@ -68,40 +73,27 @@ implementation
 
 { TMainForm }
 
-procedure TMainForm.acParameterGroupsExecute(Sender: TObject);
-begin
-  ParameterGroups.List;
-end;
-
-procedure TMainForm.acConfigurationsExecute(Sender: TObject);
-begin
-  Configurations.List;
-end;
-
-procedure TMainForm.acSourcesExecute(Sender: TObject);
-begin
-  Sources.List;
-end;
-
 procedure TMainForm.StartUp;
 var
   i: integer;
   mTab: TTabSheet;
 begin
-  Containers.Load;
-  for i := 0 to Containers.Count - 1 do
-  begin
-    mTab := pgContainers.AddTabSheet;
-    mTab.Caption := '---|---';
-    Containers[i].PinIDE(mTab);
-    mTab.Tag := i;
-  end;
+  SessionsBinder.Bind(lbSessions, 'TSession');
+  //Containers.Load;
+  //for i := 0 to Containers.Count - 1 do
+  //begin
+  //  mTab := pgContainers.AddTabSheet;
+  //  mTab.Caption := '---|---';
+  //  Containers[i].PinIDE(mTab);
+  //  mTab.Tag := i;
+  //end;
   Show;
 end;
 
 procedure TMainForm.ShutDown;
 begin
-  Containers.Save;
+  //Containers.Save;
+  SessionsBinder.Unbind;
 end;
 
 function TMainForm.GetMainForm: TForm;
@@ -114,9 +106,51 @@ begin
   AddHandlerClose(OnCloseHandler);
 end;
 
-procedure TMainForm.acEnvVariableGroupsExecute(Sender: TObject);
+function TMainForm.FindContainer(ASession: IRBData): IContainer;
+var
+  i: integer;
 begin
-  EnvVariableGroups.List;
+  Result := nil;
+  for i := 0 to Containers.Count - 1 do
+    if Containers[i].Session = ASession then
+    begin
+      Result := Containers[i];
+      Break;
+    end;
+end;
+
+function TMainForm.GetContainer(ASession: IRBData): IContainer;
+begin
+  Result := FindContainer(ASession);
+  if Result = nil then
+  begin
+    Result := Containers.Add;
+    Result.Session := ASession;
+  end;
+end;
+
+function TMainForm.PinContainer(const AContainer: IContainer): integer;
+var
+  mTab: TTabSheet;
+begin
+  mTab := pgContainers.AddTabSheet;
+  mTab.Caption := AContainer.Session.ItemByName['Name'].AsString;
+  AContainer.PinIDE(mTab);
+  mTab.Tag := NativeInt(AContainer as TObject);
+  Result := mTab.PageIndex;
+end;
+
+function TMainForm.FindContainerTab(const AContainer: IContainer): integer;
+var
+  i: integer;
+begin
+  Result := -1;
+  for i := 0 to pgContainers.PageCount - 1 do
+    if pgContainers.Pages[i].Tag = NativeInt(AContainer as TObject) then
+    begin
+      Result := i;
+      Break;
+    end;
 end;
 
 procedure TMainForm.acDeleteRunContainterExecute(Sender: TObject);
@@ -125,9 +159,13 @@ begin
   pgContainers.ActivePage.Free;
 end;
 
-procedure TMainForm.acInterpretersExecute(Sender: TObject);
+procedure TMainForm.acDeleteSessionExecute(Sender: TObject);
 begin
-  Interpreters.List;
+  if SessionsBinder.CurrentData = nil then
+    Exit;
+  Store.Delete(SessionsBinder.CurrentData);
+  Store.Flush;
+  SessionsBinder.Reload;
 end;
 
 procedure TMainForm.acNewRunContainerExecute(Sender: TObject);
@@ -139,6 +177,36 @@ begin
   mTab := pgContainers.AddTabSheet;
   mTab.Caption := '---|---';
   mContainer.PinIDE(mTab);
+end;
+
+procedure TMainForm.acNewSessionExecute(Sender: TObject);
+var
+  mContainer: IContainer;
+  mTab: integer;
+begin
+  mContainer := Containers.Add;
+  mContainer.Session := Factory.CreateObject('TSession');
+  mTab := PinContainer(mContainer);
+  pgContainers.ActivePageIndex := mTab;
+end;
+
+procedure TMainForm.acOpenSessionExecute(Sender: TObject);
+var
+  mContainer: IContainer;
+  mTab: integer;
+begin
+  if SessionsBinder.CurrentData = nil then
+    Exit;
+  mContainer := GetContainer(SessionsBinder.CurrentData);
+  mTab := FindContainerTab(mContainer);
+  if mTab = -1 then
+    mTab := PinContainer(mContainer);
+  pgContainers.ActivePageIndex := mTab;
+end;
+
+procedure TMainForm.lbSessionsDblClick(Sender: TObject);
+begin
+  acOpenSession.Execute;
 end;
 
 end.

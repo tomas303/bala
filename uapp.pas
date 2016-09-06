@@ -183,12 +183,11 @@ var
   mReg: TDIReg;
 begin
   mReg := AppDIC.Add(TMainForm, AppDIC.Locate(TDIOwner), IMainForm);
-  mReg.InjectProp('ParameterGroups', IListData, 'ParameterGroupsForm');
-  mReg.InjectProp('EnvVariableGroups', IListData, 'EnvVariableGroupsForm');
-  mReg.InjectProp('Interpreters', IListData, 'InterpretersForm');
-  mReg.InjectProp('Sources', IListData, 'SourcesForm');
-  mReg.InjectProp('Configurations', IListData, 'ConfigurationsForm');
   mReg.InjectProp('Containers', IContainers);
+  mReg.InjectProp('SessionsBinder', IRBTallyBinder, 'sessions', PersistDIC);
+  mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
+  mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
+  mReg.InjectProp('AppFactory', IDIFactory, '', fDIC);
   //
   mReg := AppDIC.Add(TSimpleListForm, AppDIC.Locate(TDIOwner), IListData, 'ParameterGroupsForm');
   mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
@@ -272,6 +271,9 @@ begin
   mReg := AppDIC.Add(TSessionForm, AppDIC.Locate(TDIOwner), IContainerIDE);
   mReg.InjectProp('Binder', IRBDataBinder, '', PersistDIC);
   mReg.InjectProp('BehaveBinder', IRBBehavioralBinder);
+  mReg.InjectProp('SessionsBinder', IRBTallyBinder, 'sessions', PersistDIC);
+  mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
+  mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
   //
   mReg := AppDIC.Add(TContainers, IContainers);
   mReg.InjectProp('AppFactory', IDIFactory, '', fDIC);
@@ -318,6 +320,10 @@ begin
   mReg.InjectProp('Factory', IPersistFactory, cPersistID);
   //
   mReg := PersistDIC.Add(TDrawGridBinder, IRBTallyBinder, 'drawgrid');
+  mReg.InjectProp('Store', IPersistStore);
+  mReg.InjectProp('Factory', IPersistFactory, cPersistID);
+  //
+  mReg := PersistDIC.Add(TListBoxBinder, IRBTallyBinder, 'sessions', ckSingle);
   mReg.InjectProp('Store', IPersistStore);
   mReg.InjectProp('Factory', IPersistFactory, cPersistID);
   //

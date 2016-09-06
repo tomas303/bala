@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, SynEdit, Forms, Controls, Graphics, Dialogs,
   StdCtrls, Menus, ExtCtrls, ActnList, ComCtrls, Grids, tvl_ibindings,
-  Containers, Sessions;
+  Containers, Sessions, trl_ipersist;
 
 type
 
@@ -18,31 +18,20 @@ type
     acPause: TAction;
     acContinue: TAction;
     acTerminate: TAction;
+    acSave: TAction;
     alRun: TActionList;
-    btnReturnInterpreter: TButton;
-    btnReturnConfiguration: TButton;
-    btnTakeSource: TButton;
-    btnTakeInterpreter: TButton;
-    btnTakeConfiguration: TButton;
-    btnReturnSource: TButton;
-    lblSourceLink: TLabel;
-    lblInterpreterLink: TLabel;
-    lblConfigurationLink: TLabel;
-    SourceLink_bind: TComboBox;
-    InterpreterLink_bind: TComboBox;
-    ConfigurationLink_bind: TComboBox;
     edExitCode: TEdit;
-    EnvVariableGroups_bind: TStringGrid;
     EnvVariables_bind: TStringGrid;
     ilRun: TImageList;
     ilRun1: TImageList;
     Interpreter_bind: TEdit;
+    Name_bind: TEdit;
     lblExitCode: TLabel;
     lblInterpreter: TLabel;
+    lblName: TLabel;
     lblSource: TLabel;
     Output_bind: TSynEdit;
     pnOutput: TPanel;
-    ParameterGroups_bind: TStringGrid;
     Parameters_bind: TStringGrid;
     pgSettings: TPageControl;
     pnOutputInfo: TPanel;
@@ -56,13 +45,14 @@ type
     splOutput: TSplitter;
     tabEnvironment: TTabSheet;
     tabParameters: TTabSheet;
-    tabLinks: TTabSheet;
     tbRun: TToolBar;
     tbStart: TToolButton;
     tbPause: TToolButton;
     tbTerminate: TToolButton;
+    tbSave: TToolButton;
     procedure acContinueExecute(Sender: TObject);
     procedure acPauseExecute(Sender: TObject);
+    procedure acSaveExecute(Sender: TObject);
     procedure acStartExecute(Sender: TObject);
     procedure acTerminateExecute(Sender: TObject);
     procedure alRunUpdate(AAction: TBasicAction; var Handled: Boolean);
@@ -76,6 +66,9 @@ type
     fBinder: IRBDataBinder;
     fBehaveBinder: IRBBehavioralBinder;
     fRunContainer: IContainer;
+    fSessionsBinder: IRBTallyBinder;
+    fFactory: IPersistFactory;
+    fStore: IPersistStore;
   protected
     procedure PushOutput(const AData: string);
     procedure PushExitCode(const AExitCode: integer);
@@ -88,6 +81,9 @@ type
   published
     property Binder: IRBDataBinder read fBinder write fBinder;
     property BehaveBinder: IRBBehavioralBinder read fBehaveBinder write fBehaveBinder;
+    property SessionsBinder: IRBTallyBinder read fSessionsBinder write fSessionsBinder;
+    property Factory: IPersistFactory read fFactory write fFactory;
+    property Store: IPersistStore read fStore write fStore;
   end;
 
 implementation
@@ -118,9 +114,7 @@ begin
   acTerminate.Enabled := RunContainer.State in [rsRun, rsPause];
   Interpreter_bind.ReadOnly := RunContainer.State in [rsRun, rsPause];
   Source_bind.ReadOnly := RunContainer.State in [rsRun, rsPause];
-  EnvVariableGroups_bind.Enabled := RunContainer.State in [rsNone];
   EnvVariables_bind.Enabled := RunContainer.State in [rsNone];
-  ParameterGroups_bind.Enabled := RunContainer.State in [rsNone];
   Parameters_bind.Enabled := RunContainer.State in [rsNone];
   Output_bind.ReadOnly := True;
 end;
@@ -185,6 +179,15 @@ begin
   tbPause.Action := acContinue;
 end;
 
+procedure TSessionForm.acSaveExecute(Sender: TObject);
+begin
+  if RunContainer <> nil then begin
+    Store.Save(RunContainer.Session);
+    Store.Flush;
+    SessionsBinder.Reload;
+  end;
+end;
+
 procedure TSessionForm.acContinueExecute(Sender: TObject);
 begin
   RunContainer.Continue;
@@ -219,7 +222,7 @@ procedure TSessionForm.Bind(const AContainer: IContainer);
 begin
   fRunContainer := AContainer;
   BehaveBinder.Bind(Self);
-  Binder.Bind(Self, fRunContainer.Session);
+  Binder.Bind(Self, RunContainer.Session);
 end;
 
 procedure TSessionForm.Flush;
