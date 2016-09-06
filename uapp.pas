@@ -19,7 +19,7 @@ uses
   tvl_ibindings, tvl_iedit, tvl_ubehavebinder,
   tvl_SimpleListForm,
 
-  uParameters, uEnvVariables, uInterpreters, uSources, uConfigurations,
+  uParameters, uEnvVariables,
   fParameterGroup, fEnvVariableGroup, fInterpreter, fSource,
 
   uContainers, Containers, fSession, uSessions;
@@ -188,66 +188,6 @@ begin
   mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
   mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
   mReg.InjectProp('AppFactory', IDIFactory, '', fDIC);
-  //
-  mReg := AppDIC.Add(TSimpleListForm, AppDIC.Locate(TDIOwner), IListData, 'ParameterGroupsForm');
-  mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
-  mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
-  mReg.InjectProp('Binder', IRBTallyBinder, 'listbox', PersistDIC);
-  mReg.InjectProp('Edit', IEditData, 'ParameterGroupForm');
-  mReg.InjectProp('DataClass', TParameterGroup.ClassName);
-  mReg.InjectProp('Caption', 'Parameters');
-  //
-  mReg := AppDIC.Add(TParameterGroupForm, AppDIC.Locate(TDIOwner), IEditData, 'ParameterGroupForm');
-  mReg.InjectProp('Binder', IRBDataBinder, '', PersistDIC);
-  mReg.InjectProp('BehaveBinder', IRBBehavioralBinder);
-  //
-  mReg := AppDIC.Add(TSimpleListForm, AppDIC.Locate(TDIOwner), IListData, 'EnvVariableGroupsForm');
-  mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
-  mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
-  mReg.InjectProp('Binder', IRBTallyBinder, 'listbox', PersistDIC);
-  mReg.InjectProp('Edit', IEditData, 'EnvVariableGroupForm');
-  mReg.InjectProp('DataClass', TEnvVariableGroup.ClassName);
-  mReg.InjectProp('Caption', 'Environment variables');
-  //
-  mReg := AppDIC.Add(TEnvVariableGroupForm, AppDIC.Locate(TDIOwner), IEditData, 'EnvVariableGroupForm');
-  mReg.InjectProp('Binder', IRBDataBinder, '', PersistDIC);
-  mReg.InjectProp('BehaveBinder', IRBBehavioralBinder);
-  //
-  mReg := AppDIC.Add(TSimpleListForm, AppDIC.Locate(TDIOwner), IListData, 'InterpretersForm');
-  mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
-  mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
-  mReg.InjectProp('Binder', IRBTallyBinder, 'listbox', PersistDIC);
-  mReg.InjectProp('Edit', IEditData, 'InterpreterForm');
-  mReg.InjectProp('DataClass', TInterpreter.ClassName);
-  mReg.InjectProp('Caption', 'Interpreters');
-  //
-  mReg := AppDIC.Add(TInterpreterForm, AppDIC.Locate(TDIOwner), IEditData, 'InterpreterForm');
-  mReg.InjectProp('Binder', IRBDataBinder, '', PersistDIC);
-  mReg.InjectProp('BehaveBinder', IRBBehavioralBinder);
-  //
-  mReg := AppDIC.Add(TSimpleListForm, AppDIC.Locate(TDIOwner), IListData, 'SourcesForm');
-  mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
-  mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
-  mReg.InjectProp('Binder', IRBTallyBinder, 'listbox', PersistDIC);
-  mReg.InjectProp('Edit', IEditData, 'SourceForm');
-  mReg.InjectProp('DataClass', TSource.ClassName);
-  mReg.InjectProp('Caption', 'Scripts');
-  //
-  mReg := AppDIC.Add(TSourceForm, AppDIC.Locate(TDIOwner), IEditData, 'SourceForm');
-  mReg.InjectProp('Binder', IRBDataBinder, '', PersistDIC);
-  mReg.InjectProp('BehaveBinder', IRBBehavioralBinder);
-  //
-  mReg := AppDIC.Add(TSimpleListForm, AppDIC.Locate(TDIOwner), IListData, 'ConfigurationsForm');
-  mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
-  mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
-  mReg.InjectProp('Binder', IRBTallyBinder, 'listbox', PersistDIC);
-  mReg.InjectProp('Edit', IEditData, 'ConfigurationForm');
-  mReg.InjectProp('DataClass', TConfiguration.ClassName);
-  mReg.InjectProp('Caption', 'Configurations');
-  //
-  mReg := AppDIC.Add(TConfigurationForm, AppDIC.Locate(TDIOwner), IEditData, 'ConfigurationForm');
-  mReg.InjectProp('Binder', IRBDataBinder, '', PersistDIC);
-  mReg.InjectProp('BehaveBinder', IRBBehavioralBinder);
 end;
 
 procedure TApp.RegisterRtl;
@@ -297,12 +237,7 @@ begin
   mReg := PersistDIC.Add(TPersistRefList, IPersistRefList);
   // persist data
   RegisterDataClass(PersistDIC, TParameter);
-  RegisterDataClass(PersistDIC, TParameterGroup);
   RegisterDataClass(PersistDIC, TEnvVariable);
-  RegisterDataClass(PersistDIC, TEnvVariableGroup);
-  RegisterDataClass(PersistDIC, TInterpreter);
-  RegisterDataClass(PersistDIC, TSource);
-  RegisterDataClass(PersistDIC, TConfiguration);
   //
   mReg := PersistDIC.Add(TStoreCache);
   //

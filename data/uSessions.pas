@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, trl_ipersist, trl_upersist, trl_upersiststore,
-  uConfigurations, uEnvVariables, uParameters, uSources, uInterpreters,
+  uEnvVariables, uParameters,
   Sessions, trl_irttibroker;
 
 type

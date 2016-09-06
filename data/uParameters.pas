@@ -29,28 +29,7 @@ type
   TPersistManyTParameter = class(TPersistManyObjects<TParameter>, IPersistManyTParameter)
   end;
 
-  { TParameterGroup }
-
-  TParameterGroup = class
-  private
-    fName: string;
-    fParameters: IPersistManyTParameter;
-  public
-    procedure AfterConstruction; override;
-  published
-    property Name: string read fName write fName;
-    property Parameters: IPersistManyTParameter read fParameters;
-  end;
-
 implementation
-
-{ TParameterGroup }
-
-procedure TParameterGroup.AfterConstruction;
-begin
-  inherited AfterConstruction;
-  fParameters := TPersistManyTParameter.Create;
-end;
 
 end.
 
