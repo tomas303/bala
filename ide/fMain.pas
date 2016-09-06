@@ -14,8 +14,6 @@ type
   { TMainForm }
 
   TMainForm = class(TForm, IMainForm)
-    acNewRunContainer: TAction;
-    acDeleteRunContainter: TAction;
     acOpenSession: TAction;
     acNewSession: TAction;
     acDeleteSession: TAction;
@@ -23,22 +21,10 @@ type
     btnAdd: TButton;
     btnDelete: TButton;
     lbSessions: TListBox;
-    miDeleteContainer: TMenuItem;
-    miSettings: TMenuItem;
-    miContainers: TMenuItem;
-    miAddContainer: TMenuItem;
-    miEnvVariableGroups: TMenuItem;
-    miInterpreters: TMenuItem;
-    miConfigurations: TMenuItem;
-    mnMain: TMainMenu;
-    miParameterGroups: TMenuItem;
-    miSources: TMenuItem;
     paSessionsNavigaton: TPanel;
     paSessions: TPanel;
     pgContainers: TPageControl;
-    procedure acDeleteRunContainterExecute(Sender: TObject);
     procedure acDeleteSessionExecute(Sender: TObject);
-    procedure acNewRunContainerExecute(Sender: TObject);
     procedure acNewSessionExecute(Sender: TObject);
     procedure acOpenSessionExecute(Sender: TObject);
     procedure lbSessionsDblClick(Sender: TObject);
@@ -74,25 +60,13 @@ implementation
 { TMainForm }
 
 procedure TMainForm.StartUp;
-var
-  i: integer;
-  mTab: TTabSheet;
 begin
   SessionsBinder.Bind(lbSessions, 'TSession');
-  //Containers.Load;
-  //for i := 0 to Containers.Count - 1 do
-  //begin
-  //  mTab := pgContainers.AddTabSheet;
-  //  mTab.Caption := '---|---';
-  //  Containers[i].PinIDE(mTab);
-  //  mTab.Tag := i;
-  //end;
   Show;
 end;
 
 procedure TMainForm.ShutDown;
 begin
-  //Containers.Save;
   SessionsBinder.Unbind;
 end;
 
@@ -153,12 +127,6 @@ begin
     end;
 end;
 
-procedure TMainForm.acDeleteRunContainterExecute(Sender: TObject);
-begin
-  Containers.Delete(pgContainers.ActivePage.Tag);
-  pgContainers.ActivePage.Free;
-end;
-
 procedure TMainForm.acDeleteSessionExecute(Sender: TObject);
 begin
   if SessionsBinder.CurrentData = nil then
@@ -166,17 +134,6 @@ begin
   Store.Delete(SessionsBinder.CurrentData);
   Store.Flush;
   SessionsBinder.Reload;
-end;
-
-procedure TMainForm.acNewRunContainerExecute(Sender: TObject);
-var
-  mContainer: IContainer;
-  mTab: TTabSheet;
-begin
-  mContainer := Containers.Add;
-  mTab := pgContainers.AddTabSheet;
-  mTab.Caption := '---|---';
-  mContainer.PinIDE(mTab);
 end;
 
 procedure TMainForm.acNewSessionExecute(Sender: TObject);
