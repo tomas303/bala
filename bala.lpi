@@ -111,7 +111,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="15">
+    <Units Count="10">
       <Unit0>
         <Filename Value="bala.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -121,78 +121,43 @@
         <IsPartOfProject Value="True"/>
       </Unit1>
       <Unit2>
-        <Filename Value="ide/fConfiguration.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="ConfigurationForm"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-      </Unit2>
-      <Unit3>
         <Filename Value="ide/fMain.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="MainForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="data/uParameters.pas"/>
+        <IsPartOfProject Value="True"/>
       </Unit3>
       <Unit4>
-        <Filename Value="data/uParameters.pas"/>
+        <Filename Value="data/uEnvVariables.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit4>
       <Unit5>
-        <Filename Value="ide/fParameterGroup.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="ParameterGroupForm"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-      </Unit5>
-      <Unit6>
-        <Filename Value="data/uEnvVariables.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit6>
-      <Unit7>
-        <Filename Value="ide/fEnvVariableGroup.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="EnvVariableGroupForm"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-      </Unit7>
-      <Unit8>
-        <Filename Value="ide/fInterpreter.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="InterpreterForm"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-      </Unit8>
-      <Unit9>
-        <Filename Value="ide/fSource.pas"/>
-        <IsPartOfProject Value="True"/>
-        <ComponentName Value="SourceForm"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-      </Unit9>
-      <Unit10>
         <Filename Value="data/uSessions.pas"/>
         <IsPartOfProject Value="True"/>
-      </Unit10>
-      <Unit11>
+      </Unit5>
+      <Unit6>
         <Filename Value="ide/fSession.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="SessionForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-      </Unit11>
-      <Unit12>
+      </Unit6>
+      <Unit7>
         <Filename Value="uContainers.pas"/>
         <IsPartOfProject Value="True"/>
-      </Unit12>
-      <Unit13>
+      </Unit7>
+      <Unit8>
         <Filename Value="Containers.pas"/>
         <IsPartOfProject Value="True"/>
-      </Unit13>
-      <Unit14>
+      </Unit8>
+      <Unit9>
         <Filename Value="Sessions.pas"/>
         <IsPartOfProject Value="True"/>
-      </Unit14>
+      </Unit9>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

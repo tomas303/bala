@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, tvl_uapplaunch,
   forms,
-  fMain, fConfiguration,
+  fMain,
   Controls,
   trl_idifactory, trl_udifactory,
   trl_ipersist,  trl_upersist, trl_upersiststore,
@@ -18,10 +18,7 @@ uses
   tvl_udatabinder, tvl_udatabinders, tvl_utallybinders,
   tvl_ibindings, tvl_iedit, tvl_ubehavebinder,
   tvl_SimpleListForm,
-
   uParameters, uEnvVariables,
-  fParameterGroup, fEnvVariableGroup, fInterpreter, fSource,
-
   uContainers, Containers, fSession, uSessions;
 type
 
