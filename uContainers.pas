@@ -136,14 +136,8 @@ procedure TContainer.FillParameters;
 var
   i: integer;
   mParams: IPersistMany;
-  mParamGroups: IPersistManyRefs;
 begin
   ProcessRunner.ClearParameters;
-  mParamGroups := Session.ItemByName['ParameterGroups'].AsInterface as IPersistManyRefs;
-  for i := 0 to mParamGroups.Count - 1 do begin
-    mParams := mParamGroups[i].Data.ItemByName['Parameters'].AsInterface as IPersistMany;
-    FillParameters(mParams);
-  end;
   mParams := Session.ItemByName['Parameters'].AsInterface as IPersistMany;
   FillParameters(mParams);
 end;
@@ -161,14 +155,8 @@ procedure TContainer.FillEnvVariables;
 var
   i: integer;
   mEnvVars: IPersistMany;
-  mEnvVarGroups: IPersistManyRefs;
 begin
   ProcessRunner.ClearEnvVariables;
-  mEnvVarGroups := Session.ItemByName['EnvVariableGroups'].AsInterface as IPersistManyRefs;
-  for i := 0 to mEnvVarGroups.Count - 1 do begin
-    mEnvVars := mEnvVarGroups[i].Data.ItemByName['EnvVariables'].AsInterface as IPersistMany;
-    FillEnvVariables(mEnvVars);
-  end;
   mEnvVars := Session.ItemByName['EnvVariables'].AsInterface as IPersistMany;
   FillEnvVariables(mEnvVars);
 end;
