@@ -32,24 +32,31 @@ object MainForm: TMainForm
       Top = 477
       Width = 256
       Align = alBottom
-      Caption = 'paSessionsNavigaton'
       ClientHeight = 33
       ClientWidth = 256
       TabOrder = 0
       object btnAdd: TButton
-        Left = 16
+        Left = 8
         Height = 25
-        Top = 0
-        Width = 75
+        Top = 4
+        Width = 62
         Action = acNewSession
         TabOrder = 0
       end
       object btnDelete: TButton
-        Left = 160
+        Left = 184
         Height = 25
-        Top = 0
-        Width = 75
+        Top = 4
+        Width = 62
         Action = acDeleteSession
+        TabOrder = 2
+      end
+      object btnDuplicate: TButton
+        Left = 72
+        Height = 25
+        Top = 4
+        Width = 62
+        Action = acDuplicateSession
         TabOrder = 1
       end
     end
@@ -69,18 +76,23 @@ object MainForm: TMainForm
     top = 24
     object acOpenSession: TAction
       Category = 'Session'
-      Caption = 'Open session'
+      Caption = 'Open'
       OnExecute = acOpenSessionExecute
     end
     object acNewSession: TAction
       Category = 'Session'
-      Caption = 'New session'
+      Caption = 'New'
       OnExecute = acNewSessionExecute
     end
     object acDeleteSession: TAction
       Category = 'Session'
-      Caption = 'Delete session'
+      Caption = 'Delete'
       OnExecute = acDeleteSessionExecute
+    end
+    object acDuplicateSession: TAction
+      Category = 'Session'
+      Caption = 'Duplicate'
+      OnExecute = acDuplicateSessionExecute
     end
   end
 end

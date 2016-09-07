@@ -17,14 +17,17 @@ type
     acOpenSession: TAction;
     acNewSession: TAction;
     acDeleteSession: TAction;
+    acDuplicateSession: TAction;
     alMain: TActionList;
     btnAdd: TButton;
+    btnDuplicate: TButton;
     btnDelete: TButton;
     lbSessions: TListBox;
     paSessionsNavigaton: TPanel;
     paSessions: TPanel;
     pgContainers: TPageControl;
     procedure acDeleteSessionExecute(Sender: TObject);
+    procedure acDuplicateSessionExecute(Sender: TObject);
     procedure acNewSessionExecute(Sender: TObject);
     procedure acOpenSessionExecute(Sender: TObject);
     procedure lbSessionsDblClick(Sender: TObject);
@@ -134,6 +137,23 @@ begin
   Store.Delete(SessionsBinder.CurrentData);
   Store.Flush;
   SessionsBinder.Reload;
+end;
+
+procedure TMainForm.acDuplicateSessionExecute(Sender: TObject);
+var
+  mContainer: IContainer;
+  mTab: integer;
+  mSession: IRBData;
+begin
+  if SessionsBinder.CurrentData = nil then
+    Exit;
+  mContainer := Containers.Add;
+  mSession := Factory.CreateObject('TSession');
+  mSession.Assign(SessionsBinder.CurrentData);
+  mSession.ItemByName['Name'].AsString := 'duplicate ' + mSession.ItemByName['Name'].AsString;
+  mContainer.Session := mSession;
+  mTab := PinContainer(mContainer);
+  pgContainers.ActivePageIndex := mTab;
 end;
 
 procedure TMainForm.acNewSessionExecute(Sender: TObject);
