@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Height = 511
   Top = 62
   Width = 941
-  Caption = 'MainForm'
+  Caption = 'bala'
   ClientHeight = 511
   ClientWidth = 941
   LCLVersion = '1.7'
