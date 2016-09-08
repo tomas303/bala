@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, SynEdit, Forms, Controls, Graphics, Dialogs,
   StdCtrls, Menus, ExtCtrls, ActnList, ComCtrls, Grids, tvl_ibindings,
-  Containers, Sessions, trl_ipersist;
+  Containers, Sessions, trl_ipersist, OsUtils;
 
 type
 
@@ -19,6 +19,7 @@ type
     acContinue: TAction;
     acTerminate: TAction;
     acSave: TAction;
+    acAddOSVariables: TAction;
     alRun: TActionList;
     edExitCode: TEdit;
     EnvVariables_bind: TStringGrid;
@@ -26,6 +27,7 @@ type
     ilRun: TImageList;
     ilRun1: TImageList;
     Interpreter_bind: TEdit;
+    miAddOSVariables: TMenuItem;
     Name_bind: TEdit;
     lblExitCode: TLabel;
     lblInterpreter: TLabel;
@@ -38,6 +40,7 @@ type
     pnOutputInfo: TPanel;
     pnRun: TPanel;
     pnSource: TPanel;
+    pmEnvVariables: TPopupMenu;
     Session_bind: TPanel;
     Source_bind: TSynEdit;
     splEnvironment: TSplitter;
@@ -50,6 +53,7 @@ type
     tbPause: TToolButton;
     tbTerminate: TToolButton;
     tbSave: TToolButton;
+    procedure acAddOSVariablesExecute(Sender: TObject);
     procedure acContinueExecute(Sender: TObject);
     procedure acPauseExecute(Sender: TObject);
     procedure acSaveExecute(Sender: TObject);
@@ -69,6 +73,7 @@ type
     fSessionsBinder: IRBTallyBinder;
     fFactory: IPersistFactory;
     fStore: IPersistStore;
+    fOsUtils: IOsUtils;
   protected
     procedure PushOutput(const AData: string);
     procedure PushExitCode(const AExitCode: integer);
@@ -84,6 +89,7 @@ type
     property SessionsBinder: IRBTallyBinder read fSessionsBinder write fSessionsBinder;
     property Factory: IPersistFactory read fFactory write fFactory;
     property Store: IPersistStore read fStore write fStore;
+    property OsUtils: IOsUtils read fOsUtils write fOsUtils;
   end;
 
 implementation
@@ -192,6 +198,12 @@ procedure TSessionForm.acContinueExecute(Sender: TObject);
 begin
   RunContainer.Continue;
   tbPause.Action := acPause;
+end;
+
+procedure TSessionForm.acAddOSVariablesExecute(Sender: TObject);
+begin
+  OsUtils.AddSystemEnvVariables(Binder.Data, 'EnvVariables', 'Name', 'Value');
+  Binder.DataChange;
 end;
 
 procedure TSessionForm.PushOutput(const AData: string);

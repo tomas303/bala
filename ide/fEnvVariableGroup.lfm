@@ -1,7 +1,7 @@
 object EnvVariableGroupForm: TEnvVariableGroupForm
-  Left = 370
+  Left = 592
   Height = 492
-  Top = 95
+  Top = 156
   Width = 477
   ActiveControl = Name_bind
   Caption = 'Environment variable'
@@ -12,13 +12,13 @@ object EnvVariableGroupForm: TEnvVariableGroupForm
     Left = 8
     Height = 15
     Top = 8
-    Width = 35
+    Width = 37
     Caption = 'Name'
     ParentColor = False
   end
   object Name_bind: TEdit
     Left = 56
-    Height = 21
+    Height = 23
     Top = 8
     Width = 419
     Anchors = [akTop, akLeft, akRight]
@@ -39,11 +39,10 @@ object EnvVariableGroupForm: TEnvVariableGroupForm
     Top = 456
     Width = 100
     Anchors = [akRight, akBottom]
-    Default = True
     DefaultCaption = True
     Kind = bkOK
     ModalResult = 1
-    TabOrder = 2
+    TabOrder = 3
   end
   object btnCancel: TBitBtn
     Left = 375
@@ -55,6 +54,18 @@ object EnvVariableGroupForm: TEnvVariableGroupForm
     DefaultCaption = True
     Kind = bkCancel
     ModalResult = 2
-    TabOrder = 3
+    TabOrder = 4
+  end
+  object btnFillActualVariables: TBitBtn
+    Left = 8
+    Height = 30
+    Top = 456
+    Width = 156
+    Anchors = [akRight, akBottom]
+    Caption = 'Add from system'
+    Default = True
+    Kind = bkOK
+    OnClick = btnFillActualVariablesClick
+    TabOrder = 2
   end
 end

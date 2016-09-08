@@ -19,7 +19,8 @@ uses
   tvl_ibindings, tvl_iedit, tvl_ubehavebinder,
   tvl_SimpleListForm,
   uParameters, uEnvVariables, fEnvVariableGroup,
-  uContainers, Containers, fSession, uSessions;
+  uContainers, Containers, fSession, uSessions,
+  OsUtils, uOsUtils;
 type
 
   { TKicker }
@@ -198,6 +199,7 @@ begin
   mReg := AppDIC.Add(TEnvVariableGroupForm, AppDIC.Locate(TDIOwner), IEditData, 'EnvVariableGroupForm');
   mReg.InjectProp('Binder', IRBDataBinder, '', PersistDIC);
   mReg.InjectProp('BehaveBinder', IRBBehavioralBinder);
+  mReg.InjectProp('OsUtils', IOsUtils);
 end;
 
 procedure TApp.RegisterRtl;
@@ -205,6 +207,8 @@ var
   mReg: TDIReg;
 begin
   mReg := AppDIC.Add(TProcessRunner);
+  //
+  mReg := AppDIC.Add(TOsUtils, IOsUtils, '', ckSingle);
 end;
 
 procedure TApp.RegisterRunContainer;
@@ -224,6 +228,7 @@ begin
   mReg.InjectProp('SessionsBinder', IRBTallyBinder, 'sessions', PersistDIC);
   mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
   mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
+  mReg.InjectProp('OsUtils', IOsUtils);
   //
   mReg := AppDIC.Add(TContainers, IContainers);
   mReg.InjectProp('AppFactory', IDIFactory, '', fDIC);

@@ -26,6 +26,7 @@ object SessionForm: TSessionForm
         Top = 232
         Width = 222
         Align = alClient
+        PopupMenu = pmEnvVariables
         TabOrder = 0
       end
       object splEnvironment: TSplitter
@@ -1236,6 +1237,10 @@ object SessionForm: TSessionForm
       ImageIndex = 3
       OnExecute = acSaveExecute
     end
+    object acAddOSVariables: TAction
+      Caption = 'Add OS variables'
+      OnExecute = acAddOSVariablesExecute
+    end
   end
   object ilRun: TImageList
     Height = 32
@@ -1764,5 +1769,12 @@ object SessionForm: TSessionForm
       35FFB46734FFB26634FFB06533FFAE6433FFAC6332FFAA6232FFA96132FFA860
       31FFA76031FEA66031F1A86131C4
     }
+  end
+  object pmEnvVariables: TPopupMenu
+    left = 648
+    top = 408
+    object miAddOSVariables: TMenuItem
+      Action = acAddOSVariables
+    end
   end
 end
