@@ -18,8 +18,10 @@ type
     acNewSession: TAction;
     acDeleteSession: TAction;
     acDuplicateSession: TAction;
+    acOpenEnvVariableGroups: TAction;
     alMain: TActionList;
     btnAdd: TButton;
+    btnEnvVariableGroups: TButton;
     btnDuplicate: TButton;
     btnDelete: TButton;
     lbSessions: TListBox;
@@ -29,6 +31,7 @@ type
     procedure acDeleteSessionExecute(Sender: TObject);
     procedure acDuplicateSessionExecute(Sender: TObject);
     procedure acNewSessionExecute(Sender: TObject);
+    procedure acOpenEnvVariableGroupsExecute(Sender: TObject);
     procedure acOpenSessionExecute(Sender: TObject);
     procedure lbSessionsDblClick(Sender: TObject);
   private
@@ -37,6 +40,7 @@ type
     fFactory: IPersistFactory;
     fStore: IPersistStore;
     fAppFactory: IDIFactory;
+    fEnvVariableGroups: IListData;
   protected
     //IMainForm
     procedure StartUp;
@@ -54,6 +58,7 @@ type
     property Factory: IPersistFactory read fFactory write fFactory;
     property Store: IPersistStore read fStore write fStore;
     property AppFactory: IDIFactory read fAppFactory write fAppFactory;
+    property EnvVariableGroups: IListData read fEnvVariableGroups write fEnvVariableGroups;
   end;
 
 implementation
@@ -165,6 +170,11 @@ begin
   mContainer.Session := Factory.CreateObject('TSession');
   mTab := PinContainer(mContainer);
   pgContainers.ActivePageIndex := mTab;
+end;
+
+procedure TMainForm.acOpenEnvVariableGroupsExecute(Sender: TObject);
+begin
+  EnvVariableGroups.List;
 end;
 
 procedure TMainForm.acOpenSessionExecute(Sender: TObject);

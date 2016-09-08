@@ -22,6 +22,7 @@ type
     alRun: TActionList;
     edExitCode: TEdit;
     EnvVariables_bind: TStringGrid;
+    EnvVariableGroups_bind: TStringGrid;
     ilRun: TImageList;
     ilRun1: TImageList;
     Interpreter_bind: TEdit;
@@ -40,7 +41,6 @@ type
     Session_bind: TPanel;
     Source_bind: TSynEdit;
     splEnvironment: TSplitter;
-    splParameters: TSplitter;
     splMain: TSplitter;
     splOutput: TSplitter;
     tabEnvironment: TTabSheet;

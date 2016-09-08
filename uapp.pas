@@ -18,7 +18,7 @@ uses
   tvl_udatabinder, tvl_udatabinders, tvl_utallybinders,
   tvl_ibindings, tvl_iedit, tvl_ubehavebinder,
   tvl_SimpleListForm,
-  uParameters, uEnvVariables,
+  uParameters, uEnvVariables, fEnvVariableGroup,
   uContainers, Containers, fSession, uSessions;
 type
 
@@ -185,6 +185,19 @@ begin
   mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
   mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
   mReg.InjectProp('AppFactory', IDIFactory, '', fDIC);
+  mReg.InjectProp('EnvVariableGroups', IListData, 'EnvVariableGroupsForm');
+  //
+  mReg := AppDIC.Add(TSimpleListForm, AppDIC.Locate(TDIOwner), IListData, 'EnvVariableGroupsForm');
+  mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
+  mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
+  mReg.InjectProp('Binder', IRBTallyBinder, 'listbox', PersistDIC);
+  mReg.InjectProp('Edit', IEditData, 'EnvVariableGroupForm');
+  mReg.InjectProp('DataClass', TEnvVariableGroup.ClassName);
+  mReg.InjectProp('Caption', 'Environment variables');
+  //
+  mReg := AppDIC.Add(TEnvVariableGroupForm, AppDIC.Locate(TDIOwner), IEditData, 'EnvVariableGroupForm');
+  mReg.InjectProp('Binder', IRBDataBinder, '', PersistDIC);
+  mReg.InjectProp('BehaveBinder', IRBBehavioralBinder);
 end;
 
 procedure TApp.RegisterRtl;
@@ -235,6 +248,7 @@ begin
   // persist data
   RegisterDataClass(PersistDIC, TParameter);
   RegisterDataClass(PersistDIC, TEnvVariable);
+  RegisterDataClass(PersistDIC, TEnvVariableGroup);
   //
   mReg := PersistDIC.Add(TStoreCache);
   //

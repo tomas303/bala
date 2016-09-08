@@ -19,6 +19,7 @@ type
     fInterpreter: string;
     fSource: TMemoString;
     fOutput: TMemoString;
+    fEnvVariableGroups: IPersistManyRefs<TEnvVariableGroup>;
     fEnvVariables: IPersistManyTEnvVariable;
     fParameters: IPersistManyTParameter;
     fSessionLinks: ISessionLinks;
@@ -29,6 +30,7 @@ type
     property Interpreter: string read fInterpreter write fInterpreter;
     property Source: TMemoString read fSource write fSource;
     property Output: TMemoString read fOutput write fOutput;
+    property EnvVariableGroups: IPersistManyRefs<TEnvVariableGroup> read fEnvVariableGroups;
     property EnvVariables: IPersistManyTEnvVariable read fEnvVariables;
     property Parameters: IPersistManyTParameter read fParameters;
   end;
@@ -42,6 +44,7 @@ var
   mGuid: TGuid;
 begin
   inherited AfterConstruction;
+  fEnvVariableGroups := TPersistManyRefs<TEnvVariableGroup>.Create;
   fEnvVariables := TPersistManyTEnvVariable.Create;
   fParameters := TPersistManyTParameter.Create;
 end;

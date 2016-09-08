@@ -155,8 +155,14 @@ procedure TContainer.FillEnvVariables;
 var
   i: integer;
   mEnvVars: IPersistMany;
+  mEnvVarGroups: IPersistManyRefs;
 begin
   ProcessRunner.ClearEnvVariables;
+  mEnvVarGroups := Session.ItemByName['EnvVariableGroups'].AsInterface as IPersistManyRefs;
+  for i := 0 to mEnvVarGroups.Count - 1 do begin
+    mEnvVars := mEnvVarGroups[i].Data.ItemByName['EnvVariables'].AsInterface as IPersistMany;
+    FillEnvVariables(mEnvVars);
+  end;
   mEnvVars := Session.ItemByName['EnvVariables'].AsInterface as IPersistMany;
   FillEnvVariables(mEnvVars);
 end;

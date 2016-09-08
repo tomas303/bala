@@ -1,7 +1,7 @@
 object SessionForm: TSessionForm
-  Left = 664
+  Left = 443
   Height = 541
-  Top = 114
+  Top = 123
   Width = 895
   Caption = 'Session'
   ClientHeight = 541
@@ -12,9 +12,9 @@ object SessionForm: TSessionForm
     Height = 541
     Top = 0
     Width = 230
-    ActivePage = tabParameters
+    ActivePage = tabEnvironment
     Align = alRight
-    TabIndex = 1
+    TabIndex = 0
     TabOrder = 0
     object tabEnvironment: TTabSheet
       Caption = 'Environment'
@@ -22,8 +22,8 @@ object SessionForm: TSessionForm
       ClientWidth = 222
       object EnvVariables_bind: TStringGrid
         Left = 0
-        Height = 506
-        Top = 5
+        Height = 279
+        Top = 232
         Width = 222
         Align = alClient
         TabOrder = 0
@@ -32,32 +32,31 @@ object SessionForm: TSessionForm
         Cursor = crVSplit
         Left = 0
         Height = 5
-        Top = 0
+        Top = 227
         Width = 222
         Align = alTop
         ResizeAnchor = akTop
+      end
+      object EnvVariableGroups_bind: TStringGrid
+        Left = 0
+        Height = 227
+        Top = 0
+        Width = 222
+        Align = alTop
+        TabOrder = 2
       end
     end
     object tabParameters: TTabSheet
       Caption = 'Parameters'
       ClientHeight = 511
       ClientWidth = 222
-      object splParameters: TSplitter
-        Cursor = crVSplit
-        Left = 0
-        Height = 5
-        Top = 0
-        Width = 222
-        Align = alTop
-        ResizeAnchor = akTop
-      end
       object Parameters_bind: TStringGrid
         Left = 0
-        Height = 506
-        Top = 5
+        Height = 511
+        Top = 0
         Width = 222
         Align = alClient
-        TabOrder = 1
+        TabOrder = 0
       end
     end
   end
