@@ -190,6 +190,7 @@ begin
   ProcessRunner.Batch := Session.ItemByName['Source'].AsString;
   FillParameters;
   FillEnvVariables;
+  ProcessRunner.PrefillCurentEnvironment := Session.ItemByName['PrefillCurrentEnvironment'].AsBoolean;
   ProcessRunner.Start;
 end;
 

@@ -23,6 +23,7 @@ type
     fEnvVariables: IPersistManyTEnvVariable;
     fParameters: IPersistManyTParameter;
     fSessionLinks: ISessionLinks;
+    fPrefillCurrentEnvironment: Boolean;
   public
     procedure AfterConstruction; override;
   published
@@ -33,6 +34,7 @@ type
     property EnvVariableGroups: IPersistManyRefs<TEnvVariableGroup> read fEnvVariableGroups;
     property EnvVariables: IPersistManyTEnvVariable read fEnvVariables;
     property Parameters: IPersistManyTParameter read fParameters;
+    property PrefillCurrentEnvironment: Boolean read fPrefillCurrentEnvironment write fPrefillCurrentEnvironment;
   end;
 
 implementation

@@ -655,10 +655,19 @@ object SessionForm: TSessionForm
         Left = 80
         Height = 23
         Top = 40
-        Width = 568
+        Width = 360
         Anchors = [akTop, akLeft, akRight]
         TabOrder = 0
         Text = 'Name_bind'
+      end
+      object PrefillCurrentEnvironment_bind: TCheckBox
+        Left = 448
+        Height = 21
+        Top = 42
+        Width = 195
+        Anchors = [akTop, akRight]
+        Caption = 'Prefill current env. variables'
+        TabOrder = 4
       end
     end
     object pnOutput: TPanel

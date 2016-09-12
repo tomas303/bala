@@ -21,6 +21,7 @@ type
     acSave: TAction;
     acAddOSVariables: TAction;
     alRun: TActionList;
+    PrefillCurrentEnvironment_bind: TCheckBox;
     edExitCode: TEdit;
     EnvVariables_bind: TStringGrid;
     EnvVariableGroups_bind: TStringGrid;
