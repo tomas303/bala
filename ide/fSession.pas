@@ -229,13 +229,14 @@ begin
     Controls[ControlCount - 1].Tag:=-1;
     Controls[ControlCount - 1].Parent := AParent;
   end;
+  Binder.BindControl(AParent, 'Name');
 end;
 
 procedure TSessionForm.Bind(const AContainer: IContainer);
 begin
   fRunContainer := AContainer;
   BehaveBinder.Bind(Self);
-  Binder.Bind(Self, RunContainer.Session);
+  Binder.BindArea(Self, RunContainer.Session);
 end;
 
 procedure TSessionForm.Flush;

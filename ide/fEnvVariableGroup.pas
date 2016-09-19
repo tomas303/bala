@@ -53,7 +53,7 @@ var
 begin
   BehaveBinder.Bind(Self);
   try
-    Binder.Bind(Self, AData);
+    Binder.BindArea(Self, AData);
     try
       Result := ShowModal = mrOK;
     finally
