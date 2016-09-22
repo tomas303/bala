@@ -8,6 +8,9 @@
       <Title Value="bala"/>
       <ResourceType Value="res"/>
       <UseXPManifest Value="True"/>
+      <XPManifest>
+        <DpiAware Value="True"/>
+      </XPManifest>
       <Icon Value="0"/>
     </General>
     <i18n>
