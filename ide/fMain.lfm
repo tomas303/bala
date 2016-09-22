@@ -1,17 +1,17 @@
 object MainForm: TMainForm
-  Left = 426
+  Left = 344
   Height = 511
-  Top = 62
+  Top = 252
   Width = 941
   Caption = 'bala'
   ClientHeight = 511
   ClientWidth = 941
   LCLVersion = '1.7'
   object pgContainers: TPageControl
-    Left = 258
+    Left = 263
     Height = 511
     Top = 0
-    Width = 683
+    Width = 678
     Align = alClient
     TabOrder = 0
     Options = [nboKeyboardTabSwitch]
@@ -78,6 +78,12 @@ object MainForm: TMainForm
       OnDblClick = lbSessionsDblClick
       TabOrder = 1
     end
+  end
+  object spSessions: TSplitter
+    Left = 258
+    Height = 511
+    Top = 0
+    Width = 5
   end
   object alMain: TActionList
     left = 40

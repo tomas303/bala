@@ -28,6 +28,7 @@ type
     paSessionsNavigaton: TPanel;
     paSessions: TPanel;
     pgContainers: TPageControl;
+    spSessions: TSplitter;
     procedure acDeleteSessionExecute(Sender: TObject);
     procedure acDuplicateSessionExecute(Sender: TObject);
     procedure acNewSessionExecute(Sender: TObject);
