@@ -54,6 +54,8 @@ type
     property AppDIC: TDIContainer read GetAppDIC;
     property PersistDIC: TDIContainer read GetPersistDIC;
   protected
+    function CreateMainFormInstance: TObject;
+  protected
     procedure InjectPersistRef(const AItem: IRBDataItem);
     procedure Setup;
     procedure RegisterDataClass(ADIC: TDIContainer; AClass: TClass);
@@ -107,6 +109,11 @@ end;
 function TApp.GetPersistDIC: TDIContainer;
 begin
   Result := fDIC.Locate(TDIContainer, cPersistID);
+end;
+
+function TApp.CreateMainFormInstance: TObject;
+begin
+  Application.CreateForm(TMainForm, Result);
 end;
 
 procedure TApp.InjectPersistRef(const AItem: IRBDataItem);
@@ -180,7 +187,7 @@ procedure TApp.RegisterIDE;
 var
   mReg: TDIReg;
 begin
-  mReg := AppDIC.Add(TMainForm, AppDIC.Locate(TDIOwner), IMainForm);
+  mReg := AppDIC.Add(CreateMainFormInstance, IMainForm);
   mReg.InjectProp('Containers', IContainers);
   mReg.InjectProp('SessionsBinder', IRBTallyBinder, 'sessions', PersistDIC);
   mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
