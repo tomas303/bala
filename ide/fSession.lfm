@@ -2,81 +2,27 @@ object SessionForm: TSessionForm
   Left = 443
   Height = 541
   Top = 123
-  Width = 895
+  Width = 875
   Caption = 'Session'
   ClientHeight = 541
-  ClientWidth = 895
+  ClientWidth = 875
   LCLVersion = '1.7'
-  object pgSettings: TPageControl
-    Left = 665
-    Height = 541
-    Top = 0
-    Width = 230
-    ActivePage = tabEnvironment
-    Align = alRight
-    TabIndex = 0
-    TabOrder = 0
-    object tabEnvironment: TTabSheet
-      Caption = 'Environment'
-      ClientHeight = 511
-      ClientWidth = 222
-      object EnvVariables_bind: TStringGrid
-        Left = 0
-        Height = 279
-        Top = 232
-        Width = 222
-        Align = alClient
-        PopupMenu = pmEnvVariables
-        TabOrder = 0
-      end
-      object splEnvironment: TSplitter
-        Cursor = crVSplit
-        Left = 0
-        Height = 5
-        Top = 227
-        Width = 222
-        Align = alTop
-        ResizeAnchor = akTop
-      end
-      object EnvVariableGroups_bind: TStringGrid
-        Left = 0
-        Height = 227
-        Top = 0
-        Width = 222
-        Align = alTop
-        TabOrder = 2
-      end
-    end
-    object tabParameters: TTabSheet
-      Caption = 'Parameters'
-      ClientHeight = 511
-      ClientWidth = 222
-      object Parameters_bind: TStringGrid
-        Left = 0
-        Height = 511
-        Top = 0
-        Width = 222
-        Align = alClient
-        TabOrder = 0
-      end
-    end
-  end
   object pnRun: TPanel
     Left = 0
     Height = 541
     Top = 0
-    Width = 660
+    Width = 662
     Align = alClient
     Caption = 'pnRun'
     ClientHeight = 541
-    ClientWidth = 660
-    TabOrder = 1
+    ClientWidth = 662
+    TabOrder = 0
     object splOutput: TSplitter
       Cursor = crVSplit
       Left = 1
       Height = 5
       Top = 291
-      Width = 658
+      Width = 660
       Align = alTop
       ResizeAnchor = akTop
     end
@@ -84,17 +30,17 @@ object SessionForm: TSessionForm
       Left = 1
       Height = 290
       Top = 1
-      Width = 658
+      Width = 660
       Align = alTop
       Caption = 'pnSource'
       ClientHeight = 290
-      ClientWidth = 658
+      ClientWidth = 660
       TabOrder = 1
       inline Source_bind: TSynEdit
         Left = 80
         Height = 174
         Top = 104
-        Width = 568
+        Width = 570
         Anchors = [akTop, akLeft, akRight, akBottom]
         Font.Height = 13
         Font.Name = 'DejaVu Sans Mono'
@@ -593,7 +539,7 @@ object SessionForm: TSessionForm
         Left = 80
         Height = 23
         Top = 72
-        Width = 568
+        Width = 570
         Anchors = [akTop, akLeft, akRight]
         TabOrder = 1
         Text = 'Interpreter_bind'
@@ -618,7 +564,7 @@ object SessionForm: TSessionForm
         Left = 1
         Height = 26
         Top = 1
-        Width = 656
+        Width = 658
         Caption = 'tbRun'
         Images = ilRun1
         TabOrder = 3
@@ -655,13 +601,13 @@ object SessionForm: TSessionForm
         Left = 80
         Height = 23
         Top = 40
-        Width = 360
+        Width = 362
         Anchors = [akTop, akLeft, akRight]
         TabOrder = 0
         Text = 'Name_bind'
       end
       object PrefillCurrentEnvironment_bind: TCheckBox
-        Left = 448
+        Left = 450
         Height = 21
         Top = 42
         Width = 195
@@ -674,17 +620,17 @@ object SessionForm: TSessionForm
       Left = 1
       Height = 244
       Top = 296
-      Width = 658
+      Width = 660
       Align = alClient
       Caption = 'pnOutput'
       ClientHeight = 244
-      ClientWidth = 658
+      ClientWidth = 660
       TabOrder = 2
       inline Output_bind: TSynEdit
         Left = 1
         Height = 208
         Top = 35
-        Width = 656
+        Width = 658
         Align = alClient
         Font.Height = 13
         Font.Name = 'DejaVu Sans Mono'
@@ -1183,13 +1129,13 @@ object SessionForm: TSessionForm
         Left = 1
         Height = 34
         Top = 1
-        Width = 656
+        Width = 658
         Align = alTop
         ClientHeight = 34
-        ClientWidth = 656
+        ClientWidth = 658
         TabOrder = 1
         object edExitCode: TEdit
-          Left = 568
+          Left = 570
           Height = 23
           Top = 8
           Width = 80
@@ -1197,7 +1143,7 @@ object SessionForm: TSessionForm
           TabOrder = 0
         end
         object lblExitCode: TLabel
-          Left = 503
+          Left = 505
           Height = 15
           Top = 8
           Width = 57
@@ -1209,12 +1155,77 @@ object SessionForm: TSessionForm
     end
   end
   object splMain: TSplitter
-    Left = 660
+    Left = 662
     Height = 541
     Top = 0
     Width = 5
     Align = alRight
     ResizeAnchor = akRight
+  end
+  object pnEnvironment: TPanel
+    Left = 667
+    Height = 541
+    Top = 0
+    Width = 208
+    Align = alRight
+    Caption = 'pnEnvironment'
+    ClientHeight = 541
+    ClientWidth = 208
+    TabOrder = 2
+    object pgSettings: TPageControl
+      Left = 1
+      Height = 539
+      Top = 1
+      Width = 206
+      ActivePage = tabEnvironment
+      Align = alClient
+      TabIndex = 0
+      TabOrder = 0
+      object tabEnvironment: TTabSheet
+        Caption = 'Environment'
+        ClientHeight = 509
+        ClientWidth = 198
+        object EnvVariables_bind: TStringGrid
+          Left = 0
+          Height = 277
+          Top = 232
+          Width = 198
+          Align = alClient
+          PopupMenu = pmEnvVariables
+          TabOrder = 0
+        end
+        object splEnvironment: TSplitter
+          Cursor = crVSplit
+          Left = 0
+          Height = 5
+          Top = 227
+          Width = 198
+          Align = alTop
+          ResizeAnchor = akTop
+        end
+        object EnvVariableGroups_bind: TStringGrid
+          Left = 0
+          Height = 227
+          Top = 0
+          Width = 198
+          Align = alTop
+          TabOrder = 2
+        end
+      end
+      object tabParameters: TTabSheet
+        Caption = 'Parameters'
+        ClientHeight = 511
+        ClientWidth = 222
+        object Parameters_bind: TStringGrid
+          Left = 0
+          Height = 511
+          Top = 0
+          Width = 222
+          Align = alClient
+          TabOrder = 0
+        end
+      end
+    end
   end
   object alRun: TActionList
     Images = ilRun1

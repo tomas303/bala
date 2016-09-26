@@ -20,6 +20,7 @@ uses
   tvl_SimpleListForm,
   uParameters, uEnvVariables, fEnvVariableGroup,
   uContainers, Containers, fSession, uSessions,
+  uSettings, SettingsBroker, uSettingsBroker,
   OsUtils, uOsUtils;
 type
 
@@ -29,14 +30,19 @@ type
   private
     fMainForm: IMainForm;
     fStore: IPersistStore;
+    fSettingsBroker: ISettingsBroker;
   protected
     //IGUIKicker
     procedure StartUp;
     procedure ShutDown;
     function GetMainForm: IMainForm;
+  protected
+    procedure LoadSettings;
+    procedure SaveSettings;
   published
     property MainForm: IMainForm read fMainForm write fMainForm;
     property Store: IPersistStore read fStore write fStore;
+    property SettingsBroker: ISettingsBroker read fSettingsBroker write fSettingsBroker;
   end;
 
   { TApp }
@@ -83,12 +89,14 @@ implementation
 procedure TKicker.StartUp;
 begin
   Store.Open;
+  LoadSettings;
   fMainForm.StartUp;
 end;
 
 procedure TKicker.ShutDown;
 begin
   fMainForm.ShutDown;
+  SaveSettings;
   Store.Close;
   fMainForm := nil;  //otherwisw AV - this is not automaticly freed interface object
   Store := nil;
@@ -97,6 +105,24 @@ end;
 function TKicker.GetMainForm: IMainForm;
 begin
   Result := fMainForm;
+end;
+
+procedure TKicker.LoadSettings;
+var
+  m: IPersistRefList;
+begin
+  m := (Store as IPersistQuery).SelectClass('TAppSetting');
+  if m.Count = 0 then begin
+    SettingsBroker.AppSetting := Store.New('TAppSetting');
+  end else begin
+    SettingsBroker.AppSetting := m.Data[0];
+  end;
+end;
+
+
+procedure TKicker.SaveSettings;
+begin
+  Store.Save(SettingsBroker.AppSetting);
 end;
 
 { TApp }
@@ -181,6 +207,7 @@ begin
   mReg := AppDIC.Add(TKicker, IGUIKicker);
   mReg.InjectProp('MainForm', IMainForm);
   mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
+  mReg.InjectProp('SettingsBroker', ISettingsBroker, '', AppDIC);
 end;
 
 procedure TApp.RegisterIDE;
@@ -194,6 +221,7 @@ begin
   mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
   mReg.InjectProp('AppFactory', IDIFactory, '', fDIC);
   mReg.InjectProp('EnvVariableGroups', IListData, 'EnvVariableGroupsForm');
+  mReg.InjectProp('SettingsBroker', ISettingsBroker, '', AppDIC);
   //
   mReg := AppDIC.Add(TSimpleListForm, AppDIC.Locate(TDIOwner), IListData, 'EnvVariableGroupsForm');
   mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
@@ -216,14 +244,14 @@ begin
   mReg := AppDIC.Add(TProcessRunner);
   //
   mReg := AppDIC.Add(TOsUtils, IOsUtils, '', ckSingle);
+  //
+  mReg := AppDIC.Add(TSettingsBroker, ISettingsBroker, '', ckSingle);
 end;
 
 procedure TApp.RegisterRunContainer;
 var
   mReg: TDIReg;
 begin
-  RegisterDataClass(PersistDIC, TSession);
-  //
   mReg := AppDIC.Add(TContainer, IContainer);
   mReg.InjectProp('Session', IRBData, 'TSession', PersistDIC);
   mReg.InjectProp('SessionIDE', IContainerIDE);
@@ -236,6 +264,7 @@ begin
   mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
   mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
   mReg.InjectProp('OsUtils', IOsUtils);
+  mReg.InjectProp('SettingsBroker', ISettingsBroker, '', AppDIC);
   //
   mReg := AppDIC.Add(TContainers, IContainers);
   mReg.InjectProp('AppFactory', IDIFactory, '', fDIC);
@@ -261,6 +290,10 @@ begin
   RegisterDataClass(PersistDIC, TParameter);
   RegisterDataClass(PersistDIC, TEnvVariable);
   RegisterDataClass(PersistDIC, TEnvVariableGroup);
+  RegisterDataClass(PersistDIC, TSession);
+  RegisterDataClass(PersistDIC, TMainIDESettings);
+  RegisterDataClass(PersistDIC, TSessionIdeSettings);
+  RegisterDataClass(PersistDIC, TAppSetting);
   //
   mReg := PersistDIC.Add(TStoreCache);
   //

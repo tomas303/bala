@@ -40,6 +40,7 @@ type
     procedure Pause;
     procedure Continue;
     procedure Terminate;
+    procedure ShutDown;
   published
     property Session: IRBData read fSession write fSession;
     property SessionIDE: IContainerIDE read fSessionIDE write SetRunIDE;
@@ -67,6 +68,7 @@ type
     procedure Delete(AIndex:  integer);
     procedure Load;
     procedure Save;
+    procedure ShutDown;
     property Containers[AIndex: integer]: IContainer read GetContainers;
     property Count: integer read GetCount;
   published
@@ -209,6 +211,11 @@ begin
   ProcessRunner.Terminate;
 end;
 
+procedure TContainer.ShutDown;
+begin
+  SessionIDE.ShutDown;
+end;
+
 { TContainers }
 
 function TContainers.GetCount: integer;
@@ -262,11 +269,21 @@ end;
 
 procedure TContainers.Save;
 var
-i: integer;
+  i: integer;
 begin
   for i := 0 to Count - 1 do
   begin
     Store.Save(Containers[i].Session);
+  end;
+end;
+
+procedure TContainers.ShutDown;
+var
+  i: integer;
+begin
+  for i := 0 to Count - 1 do
+  begin
+    Containers[i].ShutDown;
   end;
 end;
 

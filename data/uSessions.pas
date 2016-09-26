@@ -16,6 +16,7 @@ type
   TSession = class
   private
     fName: string;
+    fID: string;
     fInterpreter: string;
     fSource: TMemoString;
     fOutput: TMemoString;
@@ -24,10 +25,13 @@ type
     fParameters: IPersistManyTParameter;
     fSessionLinks: ISessionLinks;
     fPrefillCurrentEnvironment: Boolean;
+  protected
+    procedure SetID(const AValue: string);
   public
     procedure AfterConstruction; override;
   published
     property Name: string read fName write fName;
+    property ID: string read fID write SetID;
     property Interpreter: string read fInterpreter write fInterpreter;
     property Source: TMemoString read fSource write fSource;
     property Output: TMemoString read fOutput write fOutput;
@@ -46,9 +50,17 @@ var
   mGuid: TGuid;
 begin
   inherited AfterConstruction;
+  CreateGUID(mGuid);
+  fID := GUIDToString(mGuid);
   fEnvVariableGroups := TPersistManyRefs<TEnvVariableGroup>.Create;
   fEnvVariables := TPersistManyTEnvVariable.Create;
   fParameters := TPersistManyTParameter.Create;
+end;
+
+procedure TSession.SetID(const AValue: string);
+begin
+  if AValue <> '' then
+    fID := AValue;
 end;
 
 end.

@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ActnList,
   Menus, ComCtrls, ExtCtrls, StdCtrls, tvl_iedit, tvl_ibindings, trl_ipersist,
-  trl_irttibroker, trl_idifactory, Containers;
+  trl_irttibroker, trl_idifactory, Containers, SettingsBroker;
 
 type
 
@@ -42,6 +42,7 @@ type
     fStore: IPersistStore;
     fAppFactory: IDIFactory;
     fEnvVariableGroups: IListData;
+    fSettingsBroker: ISettingsBroker;
   protected
     //IMainForm
     procedure StartUp;
@@ -53,6 +54,9 @@ type
     function GetContainer(ASession: IRBData): IContainer;
     function PinContainer(const AContainer: IContainer): integer;
     function FindContainerTab(const AContainer: IContainer): integer;
+  protected
+    procedure LoadSettings;
+    procedure SaveSettings;
   published
     property Containers: IContainers read fRunContainers write fRunContainers;
     property SessionsBinder: IRBTallyBinder read fSessionsBinder write fSessionsBinder;
@@ -60,6 +64,7 @@ type
     property Store: IPersistStore read fStore write fStore;
     property AppFactory: IDIFactory read fAppFactory write fAppFactory;
     property EnvVariableGroups: IListData read fEnvVariableGroups write fEnvVariableGroups;
+    property SettingsBroker: ISettingsBroker read fSettingsBroker write fSettingsBroker;
   end;
 
 implementation
@@ -70,6 +75,7 @@ implementation
 
 procedure TMainForm.StartUp;
 begin
+  LoadSettings;
   SessionsBinder.Bind(lbSessions, 'TSession');
   Show;
 end;
@@ -77,6 +83,8 @@ end;
 procedure TMainForm.ShutDown;
 begin
   SessionsBinder.Unbind;
+  Containers.ShutDown;
+  SaveSettings;
 end;
 
 function TMainForm.GetMainForm: TForm;
@@ -134,6 +142,35 @@ begin
       Result := i;
       Break;
     end;
+end;
+
+procedure TMainForm.LoadSettings;
+var
+  mMainSettings: IRBData;
+begin
+  mMainSettings := SettingsBroker.AppSetting.ItemByName['MainIDESettings'].AsInterface as IRBData;
+  if mMainSettings.ItemByName['Left'].AsInteger > 0 then
+    Left := mMainSettings.ItemByName['Left'].AsInteger;
+  if mMainSettings.ItemByName['Top'].AsInteger > 0 then
+    Top := mMainSettings.ItemByName['Top'].AsInteger;
+  if mMainSettings.ItemByName['Width'].AsInteger > 0 then
+    Width := mMainSettings.ItemByName['Width'].AsInteger;
+  if mMainSettings.ItemByName['Height'].AsInteger > 0 then
+    Height := mMainSettings.ItemByName['Height'].AsInteger;
+  if mMainSettings.ItemByName['SplitterSessionsPos'].AsInteger > 0 then
+    spSessions.SetSplitterPosition(mMainSettings.ItemByName['SplitterSessionsPos'].AsInteger);
+end;
+
+procedure TMainForm.SaveSettings;
+var
+  mMainSettings: IRBData;
+begin
+  mMainSettings := SettingsBroker.AppSetting.ItemByName['MainIDESettings'].AsInterface as IRBData;
+  mMainSettings.ItemByName['Left'].AsInteger := Left;
+  mMainSettings.ItemByName['Top'].AsInteger := Top;
+  mMainSettings.ItemByName['Width'].AsInteger := Width;
+  mMainSettings.ItemByName['Height'].AsInteger := Height;
+  mMainSettings.ItemByName['SplitterSessionsPos'].AsInteger := spSessions.GetSplitterPosition;
 end;
 
 procedure TMainForm.acDeleteSessionExecute(Sender: TObject);

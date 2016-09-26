@@ -26,6 +26,7 @@ type
     procedure Pause;
     procedure Continue;
     procedure Terminate;
+    procedure ShutDown;
   end;
 
   { IContainerIDE }
@@ -37,6 +38,7 @@ type
     procedure Flush;
     procedure PushOutput(const AData: string);
     procedure PushExitCode(const AExitCode: integer);
+    procedure ShutDown;
   end;
 
   { IContainers }
@@ -49,6 +51,7 @@ type
     procedure Delete(AIndex:  integer);
     procedure Load;
     procedure Save;
+    procedure ShutDown;
     property Containers[AIndex:  integer]: IContainer read GetContainers; default;
     property Count: integer read GetCount;
   end;

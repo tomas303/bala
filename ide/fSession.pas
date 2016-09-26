@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, FileUtil, SynEdit, Forms, Controls, Graphics, Dialogs,
   StdCtrls, Menus, ExtCtrls, ActnList, ComCtrls, Grids, tvl_ibindings,
-  Containers, Sessions, trl_ipersist, OsUtils;
+  Containers, Sessions, trl_ipersist, OsUtils, SettingsBroker, trl_irttibroker;
 
 type
 
@@ -21,10 +21,13 @@ type
     acSave: TAction;
     acAddOSVariables: TAction;
     alRun: TActionList;
+    EnvVariableGroups_bind: TStringGrid;
+    EnvVariables_bind: TStringGrid;
+    pnEnvironment: TPanel;
+    Parameters_bind: TStringGrid;
+    pgSettings: TPageControl;
     PrefillCurrentEnvironment_bind: TCheckBox;
     edExitCode: TEdit;
-    EnvVariables_bind: TStringGrid;
-    EnvVariableGroups_bind: TStringGrid;
     ilRun: TImageList;
     ilRun1: TImageList;
     Interpreter_bind: TEdit;
@@ -36,8 +39,6 @@ type
     lblSource: TLabel;
     Output_bind: TSynEdit;
     pnOutput: TPanel;
-    Parameters_bind: TStringGrid;
-    pgSettings: TPageControl;
     pnOutputInfo: TPanel;
     pnRun: TPanel;
     pnSource: TPanel;
@@ -75,13 +76,18 @@ type
     fFactory: IPersistFactory;
     fStore: IPersistStore;
     fOsUtils: IOsUtils;
+    fSettingsBroker: ISettingsBroker;
   protected
     procedure PushOutput(const AData: string);
     procedure PushExitCode(const AExitCode: integer);
     procedure Pin(const AParent: TWinControl);
-  protected
     procedure Bind(const AContainer: IContainer);
     procedure Flush;
+    procedure ShutDown;
+  protected
+    function GetSessionSetting(const ASessionSettings: IPersistMany; const AID: string): IRBData;
+    procedure LoadSettings;
+    procedure SaveSettings;
   public
     property RunContainer: IContainer read fRunContainer;
   published
@@ -91,6 +97,7 @@ type
     property Factory: IPersistFactory read fFactory write fFactory;
     property Store: IPersistStore read fStore write fStore;
     property OsUtils: IOsUtils read fOsUtils write fOsUtils;
+    property SettingsBroker: ISettingsBroker read fSettingsBroker write fSettingsBroker;
   end;
 
 implementation
@@ -230,6 +237,7 @@ begin
     Controls[ControlCount - 1].Parent := AParent;
   end;
   Binder.BindControl(AParent, 'Name');
+  LoadSettings;
 end;
 
 procedure TSessionForm.Bind(const AContainer: IContainer);
@@ -243,6 +251,56 @@ procedure TSessionForm.Flush;
 begin
   Output_bind.Clear;
   Binder.Flush;
+end;
+
+procedure TSessionForm.ShutDown;
+begin
+  SaveSettings;
+end;
+
+function TSessionForm.GetSessionSetting(const ASessionSettings: IPersistMany;
+  const AID: string): IRBData;
+var
+  i: integer;
+begin
+  Result := nil;
+  for i := 0 to ASessionSettings.Count - 1 do begin
+    if ASessionSettings.AsPersistData[i].ItemByName['SessionID'].AsString = AID then
+    begin
+      Result := ASessionSettings.AsPersistData[i];
+      Exit;
+    end;
+  end;
+  ASessionSettings.Count := ASessionSettings.Count + 1;
+  Result := ASessionSettings.AsPersistData[ASessionSettings.Count - 1];
+  Result.ItemByName['SessionID'].AsString := AID;
+end;
+
+procedure TSessionForm.LoadSettings;
+var
+  mSessionSettings: IPersistMany;
+  mSessionSetting: IRBData;
+begin
+  mSessionSettings := SettingsBroker.AppSetting.ItemByName['SessionIdeSettings'].AsInterface as IPersistMany;
+  mSessionSetting := GetSessionSetting(mSessionSettings, RunContainer.Session.ItemByName['ID'].AsString);
+  if mSessionSetting.ItemByName['SplitterEnvironmentPos'].AsInteger > 0 then
+    splEnvironment.SetSplitterPosition(mSessionSetting.ItemByName['SplitterEnvironmentPos'].AsInteger);
+  if mSessionSetting.ItemByName['SplitterMainPos'].AsInteger > 0 then
+    splMain.SetSplitterPosition(mSessionSetting.ItemByName['SplitterMainPos'].AsInteger);
+  if mSessionSetting.ItemByName['SplitterOutputPos'].AsInteger > 0 then
+    splOutput.SetSplitterPosition(mSessionSetting.ItemByName['SplitterOutputPos'].AsInteger);
+end;
+
+procedure TSessionForm.SaveSettings;
+var
+  mSessionSettings: IPersistMany;
+  mSessionSetting: IRBData;
+begin
+  mSessionSettings := SettingsBroker.AppSetting.ItemByName['SessionIdeSettings'].AsInterface as IPersistMany;
+  mSessionSetting := GetSessionSetting(mSessionSettings, RunContainer.Session.ItemByName['ID'].AsString);
+  mSessionSetting.ItemByName['SplitterEnvironmentPos'].AsInteger := splEnvironment.GetSplitterPosition;
+  mSessionSetting.ItemByName['SplitterMainPos'].AsInteger := splMain.GetSplitterPosition;
+  mSessionSetting.ItemByName['SplitterOutputPos'].AsInteger := splOutput.GetSplitterPosition;
 end;
 
 end.
