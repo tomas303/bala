@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, trl_ipersist, trl_upersist, trl_upersiststore,
   uEnvVariables, uParameters,
-  Sessions, trl_irttibroker;
+  Sessions, trl_irttibroker, iBala;
 
 type
 
@@ -19,7 +19,9 @@ type
     fID: string;
     fInterpreter: string;
     fSource: TMemoString;
+    fSourceHighLight: THighLight;
     fOutput: TMemoString;
+    fOutputHighLight: THighLight;
     fEnvVariableGroups: IPersistManyRefs<TEnvVariableGroup>;
     fEnvVariables: IPersistManyTEnvVariable;
     fParameters: IPersistManyTParameter;
@@ -34,7 +36,9 @@ type
     property ID: string read fID write SetID;
     property Interpreter: string read fInterpreter write fInterpreter;
     property Source: TMemoString read fSource write fSource;
+    property SourceHighLight: THighLight read fSourceHighLight write fSourceHighLight;
     property Output: TMemoString read fOutput write fOutput;
+    property OutputHighLight: THighLight read fOutputHighLight write fOutputHighLight;
     property EnvVariableGroups: IPersistManyRefs<TEnvVariableGroup> read fEnvVariableGroups;
     property EnvVariables: IPersistManyTEnvVariable read fEnvVariables;
     property Parameters: IPersistManyTParameter read fParameters;

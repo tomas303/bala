@@ -11,7 +11,6 @@
       <XPManifest>
         <DpiAware Value="True"/>
       </XPManifest>
-      <Icon Value="0"/>
     </General>
     <i18n>
       <EnableI18N LFM="False"/>
@@ -114,7 +113,7 @@
         <PackageName Value="LCL"/>
       </Item4>
     </RequiredPackages>
-    <Units Count="16">
+    <Units Count="18">
       <Unit0>
         <Filename Value="bala.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -188,6 +187,14 @@
         <Filename Value="uSettingsBroker.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit15>
+      <Unit16>
+        <Filename Value="iBala.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit16>
+      <Unit17>
+        <Filename Value="uHighLight.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit17>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

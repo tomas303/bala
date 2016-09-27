@@ -7,7 +7,8 @@ interface
 uses
   Classes, SysUtils, FileUtil, SynEdit, Forms, Controls, Graphics, Dialogs,
   StdCtrls, Menus, ExtCtrls, ActnList, ComCtrls, Grids, tvl_ibindings,
-  Containers, Sessions, trl_ipersist, OsUtils, SettingsBroker, trl_irttibroker;
+  Containers, Sessions, trl_ipersist, OsUtils, SettingsBroker, trl_irttibroker,
+  iBala, uHighLight, SynEditHighlighter, typinfo;
 
 type
 
@@ -21,6 +22,8 @@ type
     acSave: TAction;
     acAddOSVariables: TAction;
     alRun: TActionList;
+    lblSourceHighLight: TLabel;
+    SourceHighLight_bind: TComboBox;
     EnvVariableGroups_bind: TStringGrid;
     EnvVariables_bind: TStringGrid;
     pnEnvironment: TPanel;
@@ -88,6 +91,9 @@ type
     function GetSessionSetting(const ASessionSettings: IPersistMany; const AID: string): IRBData;
     procedure LoadSettings;
     procedure SaveSettings;
+  protected
+    procedure ResetHighlighter(const AHighLightName: string);
+    procedure SourceHighlighterDataChange(const ADataItem: IRBDataItem; AControl: TWinControl);
   public
     property RunContainer: IContainer read fRunContainer;
   published
@@ -245,6 +251,8 @@ begin
   fRunContainer := AContainer;
   BehaveBinder.Bind(Self);
   Binder.BindArea(Self, RunContainer.Session);
+  Binder.RegisterChangeEvent('SourceHighLight', @SourceHighlighterDataChange);
+  ResetHighlighter(Binder.Data.ItemByName['SourceHighLight'].AsString);
 end;
 
 procedure TSessionForm.Flush;
@@ -255,6 +263,7 @@ end;
 
 procedure TSessionForm.ShutDown;
 begin
+  Binder.UnregisterChangeEvent('SourceHighLight', @SourceHighlighterDataChange);
   SaveSettings;
 end;
 
@@ -301,6 +310,32 @@ begin
   mSessionSetting.ItemByName['SplitterEnvironmentPos'].AsInteger := splEnvironment.GetSplitterPosition;
   mSessionSetting.ItemByName['SplitterMainPos'].AsInteger := splMain.GetSplitterPosition;
   mSessionSetting.ItemByName['SplitterOutputPos'].AsInteger := splOutput.GetSplitterPosition;
+end;
+
+procedure TSessionForm.ResetHighlighter(const AHighLightName: string);
+var
+  mHL: THighLight;
+  mHLClass: TSynCustomHighlighterClass;
+begin
+  mHL := THighLight(GetEnumValue(TypeInfo(THighLight), AHighLightName));
+  mHLClass := cHighLighters[mHL];
+  if (mHLClass = nil) and (Source_bind.Highlighter <> nil) then
+    Source_bind.Highlighter.Free
+  else
+  if (mHLClass <> nil) and (Source_bind.Highlighter = nil) then
+    Source_bind.Highlighter := mHLClass.Create(Source_bind)
+  else
+  if (mHLClass <> nil) and (Source_bind.Highlighter <> nil) then
+  begin
+    Source_bind.Highlighter.Free;
+    Source_bind.Highlighter := mHLClass.Create(Source_bind);
+  end;
+end;
+
+procedure TSessionForm.SourceHighlighterDataChange(
+  const ADataItem: IRBDataItem; AControl: TWinControl);
+begin
+  ResetHighlighter(ADataItem.AsString);
 end;
 
 end.

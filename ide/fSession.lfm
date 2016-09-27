@@ -48,7 +48,7 @@ object SessionForm: TSessionForm
         Font.Quality = fqNonAntialiased
         ParentColor = False
         ParentFont = False
-        TabOrder = 2
+        TabOrder = 5
         Gutter.Width = 57
         Gutter.MouseActions = <>
         RightGutter.Width = 0
@@ -539,9 +539,9 @@ object SessionForm: TSessionForm
         Left = 80
         Height = 23
         Top = 72
-        Width = 570
+        Width = 362
         Anchors = [akTop, akLeft, akRight]
-        TabOrder = 1
+        TabOrder = 2
         Text = 'Interpreter_bind'
       end
       object lblInterpreter: TLabel
@@ -567,7 +567,7 @@ object SessionForm: TSessionForm
         Width = 658
         Caption = 'tbRun'
         Images = ilRun1
-        TabOrder = 3
+        TabOrder = 0
         object tbStart: TToolButton
           Left = 1
           Top = 2
@@ -603,7 +603,7 @@ object SessionForm: TSessionForm
         Top = 40
         Width = 362
         Anchors = [akTop, akLeft, akRight]
-        TabOrder = 0
+        TabOrder = 1
         Text = 'Name_bind'
       end
       object PrefillCurrentEnvironment_bind: TCheckBox
@@ -613,7 +613,26 @@ object SessionForm: TSessionForm
         Width = 195
         Anchors = [akTop, akRight]
         Caption = 'Prefill current env. variables'
+        TabOrder = 3
+      end
+      object SourceHighLight_bind: TComboBox
+        Left = 545
+        Height = 23
+        Top = 72
+        Width = 100
+        Anchors = [akTop, akRight]
+        ItemHeight = 15
         TabOrder = 4
+        Text = 'SourceHighLight_bind'
+      end
+      object lblSourceHighLight: TLabel
+        Left = 456
+        Height = 15
+        Top = 72
+        Width = 68
+        Anchors = [akTop, akRight]
+        Caption = 'Highlighter'
+        ParentColor = False
       end
     end
     object pnOutput: TPanel
