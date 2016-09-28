@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, SynEdit, Forms, Controls, Graphics, Dialogs,
   StdCtrls, Menus, ExtCtrls, ActnList, ComCtrls, Grids, tvl_ibindings,
   Containers, Sessions, trl_ipersist, OsUtils, SettingsBroker, trl_irttibroker,
-  iBala, uHighLight, SynEditHighlighter, typinfo;
+  iBala, uHighLight, SynEditHighlighter, typinfo, LMessages, LCLType;
 
 type
 
@@ -22,6 +22,7 @@ type
     acSave: TAction;
     acAddOSVariables: TAction;
     alRun: TActionList;
+    chkRollOutput: TCheckBox;
     lblSourceHighLight: TLabel;
     SourceHighLight_bind: TComboBox;
     EnvVariableGroups_bind: TStringGrid;
@@ -221,9 +222,17 @@ begin
 end;
 
 procedure TSessionForm.PushOutput(const AData: string);
+var
+  mMsg: TLMessage;
+  mMsgScroll: TLMScroll absolute mMsg;
 begin
   Output_bind.Lines.Add(AData);
   Binder.Flush(Output_bind);
+  if chkRollOutput.Checked then begin
+    mMsgScroll.Msg := LM_VSCROLL;
+    mMsgScroll.ScrollCode := SB_BOTTOM;
+    Output_bind.WndProc(mMsg);
+  end;
 end;
 
 procedure TSessionForm.PushExitCode(const AExitCode: integer);
@@ -298,6 +307,7 @@ begin
     splMain.SetSplitterPosition(mSessionSetting.ItemByName['SplitterMainPos'].AsInteger);
   if mSessionSetting.ItemByName['SplitterOutputPos'].AsInteger > 0 then
     splOutput.SetSplitterPosition(mSessionSetting.ItemByName['SplitterOutputPos'].AsInteger);
+  chkRollOutput.Checked := mSessionSetting.ItemByName['RollOutput'].AsBoolean;
 end;
 
 procedure TSessionForm.SaveSettings;
@@ -310,6 +320,7 @@ begin
   mSessionSetting.ItemByName['SplitterEnvironmentPos'].AsInteger := splEnvironment.GetSplitterPosition;
   mSessionSetting.ItemByName['SplitterMainPos'].AsInteger := splMain.GetSplitterPosition;
   mSessionSetting.ItemByName['SplitterOutputPos'].AsInteger := splOutput.GetSplitterPosition;
+  mSessionSetting.ItemByName['RollOutput'].AsBoolean := chkRollOutput.Checked;
 end;
 
 procedure TSessionForm.ResetHighlighter(const AHighLightName: string);

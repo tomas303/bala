@@ -34,11 +34,13 @@ type
     fSplitterEnvironmentPos: integer;
     fSplitterMainPos: integer;
     fSplitterOutputPos: integer;
+    fRollOutput: Boolean;
   published
     property SessionID: string read fSessionID write fSessionID;
     property SplitterEnvironmentPos: integer read fSplitterEnvironmentPos write fSplitterEnvironmentPos;
     property SplitterMainPos: integer read fSplitterMainPos write fSplitterMainPos;
     property SplitterOutputPos: integer read fSplitterOutputPos write fSplitterOutputPos;
+    property RollOutput: Boolean read fRollOutput write fRollOutput;
   end;
 
   { IPersistManyTSessionIdeSettings }

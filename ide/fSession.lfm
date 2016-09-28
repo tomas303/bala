@@ -1159,7 +1159,7 @@ object SessionForm: TSessionForm
           Top = 8
           Width = 80
           Anchors = [akTop, akRight]
-          TabOrder = 0
+          TabOrder = 1
         end
         object lblExitCode: TLabel
           Left = 505
@@ -1169,6 +1169,14 @@ object SessionForm: TSessionForm
           Anchors = [akTop, akRight]
           Caption = 'Exit code'
           ParentColor = False
+        end
+        object chkRollOutput: TCheckBox
+          Left = 8
+          Height = 21
+          Top = 10
+          Width = 91
+          Caption = 'Roll output'
+          TabOrder = 0
         end
       end
     end
