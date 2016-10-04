@@ -37,6 +37,7 @@ type
     procedure Pin(const AParent: TWinControl);
     procedure Flush;
     procedure PushOutput(const AData: string);
+    procedure PushErrOutput(const AData: string);
     procedure PushExitCode(const AExitCode: integer);
     procedure ShutDown;
   end;

@@ -83,6 +83,7 @@ type
     fSettingsBroker: ISettingsBroker;
   protected
     procedure PushOutput(const AData: string);
+    procedure PushErrOutput(const AData: string);
     procedure PushExitCode(const AExitCode: integer);
     procedure Pin(const AParent: TWinControl);
     procedure Bind(const AContainer: IContainer);
@@ -95,6 +96,8 @@ type
   protected
     procedure ResetHighlighter(const AHighLightName: string);
     procedure SourceHighlighterDataChange(const ADataItem: IRBDataItem; AControl: TWinControl);
+  protected
+    procedure ScrollOutput;
   public
     property RunContainer: IContainer read fRunContainer;
   published
@@ -222,17 +225,17 @@ begin
 end;
 
 procedure TSessionForm.PushOutput(const AData: string);
-var
-  mMsg: TLMessage;
-  mMsgScroll: TLMScroll absolute mMsg;
 begin
   Output_bind.Lines.Add(AData);
   Binder.Flush(Output_bind);
-  if chkRollOutput.Checked then begin
-    mMsgScroll.Msg := LM_VSCROLL;
-    mMsgScroll.ScrollCode := SB_BOTTOM;
-    Output_bind.WndProc(mMsg);
-  end;
+  ScrollOutput;
+end;
+
+procedure TSessionForm.PushErrOutput(const AData: string);
+begin
+  Output_bind.Lines.Add(AData);
+  Binder.Flush(Output_bind);
+  ScrollOutput;
 end;
 
 procedure TSessionForm.PushExitCode(const AExitCode: integer);
@@ -347,6 +350,18 @@ procedure TSessionForm.SourceHighlighterDataChange(
   const ADataItem: IRBDataItem; AControl: TWinControl);
 begin
   ResetHighlighter(ADataItem.AsString);
+end;
+
+procedure TSessionForm.ScrollOutput;
+var
+  mMsg: TLMessage;
+  mMsgScroll: TLMScroll absolute mMsg;
+begin
+  if chkRollOutput.Checked then begin
+    mMsgScroll.Msg := LM_VSCROLL;
+    mMsgScroll.ScrollCode := SB_BOTTOM;
+    Output_bind.WndProc(mMsg);
+  end;
 end;
 
 end.

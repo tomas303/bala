@@ -27,6 +27,7 @@ type
     function GetRunIDE: IContainerIDE;
     function GetState: TRunState;
     procedure OnPushOutput(const AData: string);
+    procedure OnPushErrOutput(const AData: string);
     procedure OnFinished(const AExitCode: integer);
   protected
     procedure FillParameters(const AParameters: IPersistMany); overload;
@@ -116,6 +117,11 @@ begin
     Result := rsNone;
 end;
 
+procedure TContainer.OnPushErrOutput(const AData: string);
+begin
+  SessionIDE.PushErrOutput(AData);
+end;
+
 procedure TContainer.OnPushOutput(const AData: string);
 begin
   SessionIDE.PushOutput(AData);
@@ -175,6 +181,7 @@ begin
     SessionIDE.Bind(Self);
   if ProcessRunner <> nil then begin
     ProcessRunner.OnPushOutput := OnPushOutput;
+    ProcessRunner.OnPushErrOutput := OnPushErrOutput;
     ProcessRunner.OnFinish := OnFinished;
   end;
 end;
