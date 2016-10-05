@@ -1,7 +1,7 @@
 object SessionForm: TSessionForm
-  Left = 443
+  Left = 275
   Height = 541
-  Top = 123
+  Top = 91
   Width = 875
   Caption = 'Session'
   ClientHeight = 541
@@ -48,7 +48,7 @@ object SessionForm: TSessionForm
         Font.Quality = fqNonAntialiased
         ParentColor = False
         ParentFont = False
-        TabOrder = 5
+        TabOrder = 6
         Gutter.Width = 57
         Gutter.MouseActions = <>
         RightGutter.Width = 0
@@ -539,9 +539,9 @@ object SessionForm: TSessionForm
         Left = 80
         Height = 23
         Top = 72
-        Width = 362
+        Width = 336
         Anchors = [akTop, akLeft, akRight]
-        TabOrder = 2
+        TabOrder = 4
         Text = 'Interpreter_bind'
       end
       object lblInterpreter: TLabel
@@ -601,38 +601,57 @@ object SessionForm: TSessionForm
         Left = 80
         Height = 23
         Top = 40
-        Width = 362
+        Width = 176
         Anchors = [akTop, akLeft, akRight]
         TabOrder = 1
         Text = 'Name_bind'
       end
       object PrefillCurrentEnvironment_bind: TCheckBox
-        Left = 450
+        Left = 264
         Height = 21
-        Top = 42
+        Top = 40
         Width = 195
         Anchors = [akTop, akRight]
         Caption = 'Prefill current env. variables'
-        TabOrder = 3
+        TabOrder = 2
       end
       object SourceHighLight_bind: TComboBox
-        Left = 545
+        Left = 550
+        Height = 23
+        Top = 40
+        Width = 100
+        Anchors = [akTop, akRight]
+        ItemHeight = 15
+        TabOrder = 3
+        Text = 'SourceHighLight_bind'
+      end
+      object lblSourceHighLight: TLabel
+        Left = 477
+        Height = 15
+        Top = 40
+        Width = 68
+        Anchors = [akTop, akRight]
+        Caption = 'Highlighter'
+        ParentColor = False
+      end
+      object lblScriptLaunch: TLabel
+        Left = 436
+        Height = 15
+        Top = 72
+        Width = 109
+        Anchors = [akTop, akRight]
+        Caption = 'How launch script'
+        ParentColor = False
+      end
+      object ScriptLaunch_bind: TComboBox
+        Left = 550
         Height = 23
         Top = 72
         Width = 100
         Anchors = [akTop, akRight]
         ItemHeight = 15
-        TabOrder = 4
-        Text = 'SourceHighLight_bind'
-      end
-      object lblSourceHighLight: TLabel
-        Left = 456
-        Height = 15
-        Top = 72
-        Width = 68
-        Anchors = [akTop, akRight]
-        Caption = 'Highlighter'
-        ParentColor = False
+        TabOrder = 5
+        Text = 'ScriptLaunch_bind'
       end
     end
     object pnOutput: TPanel

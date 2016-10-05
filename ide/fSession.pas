@@ -24,6 +24,7 @@ type
     alRun: TActionList;
     chkRollOutput: TCheckBox;
     lblSourceHighLight: TLabel;
+    lblScriptLaunch: TLabel;
     SourceHighLight_bind: TComboBox;
     EnvVariableGroups_bind: TStringGrid;
     EnvVariables_bind: TStringGrid;
@@ -48,6 +49,7 @@ type
     pnSource: TPanel;
     pmEnvVariables: TPopupMenu;
     Session_bind: TPanel;
+    ScriptLaunch_bind: TComboBox;
     Source_bind: TSynEdit;
     splEnvironment: TSplitter;
     splMain: TSplitter;

@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, trl_ipersist, trl_upersist, trl_upersiststore,
   uEnvVariables, uParameters,
-  Sessions, trl_irttibroker, iBala;
+  Sessions, trl_irttibroker, iBala, Containers;
 
 type
 
@@ -27,6 +27,7 @@ type
     fParameters: IPersistManyTParameter;
     fSessionLinks: ISessionLinks;
     fPrefillCurrentEnvironment: Boolean;
+    fScriptLaunch: TScriptLaunch;
   protected
     procedure SetID(const AValue: string);
   public
@@ -43,6 +44,7 @@ type
     property EnvVariables: IPersistManyTEnvVariable read fEnvVariables;
     property Parameters: IPersistManyTParameter read fParameters;
     property PrefillCurrentEnvironment: Boolean read fPrefillCurrentEnvironment write fPrefillCurrentEnvironment;
+    property ScriptLaunch: TScriptLaunch read fScriptLaunch write fScriptLaunch;
   end;
 
 implementation

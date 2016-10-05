@@ -11,6 +11,8 @@ type
 
   TRunState = (rsNone, rsRun, rsPause);
 
+  TScriptLaunch = (slNothing, slSentToInput, slSaveToFile);
+
   { IContainer }
 
   IContainer = interface

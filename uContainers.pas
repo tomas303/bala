@@ -7,7 +7,7 @@ interface
 uses
   Classes, SysUtils, Forms, fgl,
   trl_ipersist, trl_idifactory, trl_irttibroker, trl_processrunner, Containers,
-  uParameters, Controls;
+  uParameters, Controls, TypInfo;
 
 type
 
@@ -20,6 +20,7 @@ type
     fSession: IRBData;
     fSessionIDE: IContainerIDE;
     fProcessRunner: TProcessRunner;
+    fBalaSource, fBalaFile: string;
     procedure SetRunIDE(AValue: IContainerIDE);
   protected
     function GetSession: IRBData;
@@ -34,6 +35,8 @@ type
     procedure FillParameters; overload;
     procedure FillEnvVariables(const AEnvVariables: IPersistMany); overload;
     procedure FillEnvVariables; overload;
+    procedure AddBalaEnvVariables;
+    function SaveToTempFile(const ASource: string): string;
   public
     procedure Bind;
     procedure PinIDE(const AParent: TWinControl);
@@ -173,6 +176,30 @@ begin
   end;
   mEnvVars := Session.ItemByName['EnvVariables'].AsInterface as IPersistMany;
   FillEnvVariables(mEnvVars);
+  AddBalaEnvVariables;
+end;
+
+procedure TContainer.AddBalaEnvVariables;
+begin
+  ProcessRunner.AddEnvVariable('BALA_SOURCE', fBalaSource);
+  ProcessRunner.AddEnvVariable('BALA_FILE', fBalaFile);
+end;
+
+function TContainer.SaveToTempFile(const ASource: string): string;
+var
+  mFS: TFileStream;
+  mContent: UTF8String;
+begin
+  Result := GetTempFileName;
+  mFS := TFileStream.Create(Result, fmCreate);
+  try
+    if ASource <> '' then begin
+      mContent := ASource;
+      mFS.Write(mContent[1], Length(mContent));
+    end;
+  finally
+    mFS.Free;
+  end;
 end;
 
 procedure TContainer.Bind;
@@ -193,10 +220,23 @@ begin
 end;
 
 procedure TContainer.Start;
+var
+  mLaunch: TScriptLaunch;
 begin
   SessionIDE.Flush;
   ProcessRunner.Command := Session.ItemByName['Interpreter'].AsString;
-  ProcessRunner.Batch := Session.ItemByName['Source'].AsString;
+  fBalaSource := Session.ItemByName['Source'].AsString;
+  fBalaFile := '';
+  ProcessRunner.Batch := ''; // this is whait is sent to standart input
+  mLaunch := TScriptLaunch(GetEnumValue(TypeInfo(TScriptLaunch), Session.ItemByName['ScriptLaunch'].AsString));
+  case mLaunch of
+    slSentToInput:
+      ProcessRunner.Batch := fBalaSource;
+    slSaveToFile:
+      begin
+        fBalaFile := SaveToTempFile(Session.ItemByName['Source'].AsString);
+      end;
+  end;
   FillParameters;
   FillEnvVariables;
   ProcessRunner.PrefillCurentEnvironment := Session.ItemByName['PrefillCurrentEnvironment'].AsBoolean;
