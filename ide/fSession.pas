@@ -8,7 +8,7 @@ uses
   Classes, SysUtils, FileUtil, SynEdit, Forms, Controls, Graphics, Dialogs,
   StdCtrls, Menus, ExtCtrls, ActnList, ComCtrls, Grids, tvl_ibindings,
   Containers, Sessions, trl_ipersist, OsUtils, SettingsBroker, trl_irttibroker,
-  iBala, uHighLight, SynEditHighlighter, typinfo, LMessages, LCLType;
+  iBala, uHighLight, SynEditHighlighter, typinfo, LMessages, LCLType, fgl, SynEditMarkupSpecialLine;
 
 type
 
@@ -74,6 +74,8 @@ type
     procedure btnTakeConfigurationClick(Sender: TObject);
     procedure btnTakeInterpreterClick(Sender: TObject);
     procedure btnTakeSourceClick(Sender: TObject);
+    procedure Output_bindSpecialLineColors(Sender: TObject; Line: integer;
+      var Special: boolean; var FG, BG: TColor);
   private
     fBinder: IRBDataBinder;
     fBehaveBinder: IRBBehavioralBinder;
@@ -83,6 +85,10 @@ type
     fStore: IPersistStore;
     fOsUtils: IOsUtils;
     fSettingsBroker: ISettingsBroker;
+  private type
+    TErrLines = specialize TFPGList<integer>;
+  private
+    fErrLines: TErrLines;
   protected
     procedure PushOutput(const AData: string);
     procedure PushErrOutput(const AData: string);
@@ -101,6 +107,8 @@ type
   protected
     procedure ScrollOutput;
   public
+    procedure AfterConstruction; override;
+    procedure BeforeDestruction; override;
     property RunContainer: IContainer read fRunContainer;
   published
     property Binder: IRBDataBinder read fBinder write fBinder;
@@ -120,6 +128,7 @@ implementation
 
 procedure TSessionForm.acStartExecute(Sender: TObject);
 begin
+  fErrLines.Clear;
   Output_bind.Clear;
   edExitCode.Text := '';
   edExitCode.Color := clWhite;
@@ -199,6 +208,15 @@ begin
   Binder.DataChange;
 end;
 
+procedure TSessionForm.Output_bindSpecialLineColors(Sender: TObject;
+  Line: integer; var Special: boolean; var FG, BG: TColor);
+begin
+  if fErrLines.IndexOf(Line) > -1 then begin
+    Special := True;
+    BG := clRed;
+  end;
+end;
+
 procedure TSessionForm.acPauseExecute(Sender: TObject);
 begin
   RunContainer.Pause;
@@ -236,6 +254,7 @@ end;
 procedure TSessionForm.PushErrOutput(const AData: string);
 begin
   Output_bind.Lines.Add(AData);
+  fErrLines.Add(Output_bind.Lines.Count);
   Binder.Flush(Output_bind);
   ScrollOutput;
 end;
@@ -364,6 +383,18 @@ begin
     mMsgScroll.ScrollCode := SB_BOTTOM;
     Output_bind.WndProc(mMsg);
   end;
+end;
+
+procedure TSessionForm.AfterConstruction;
+begin
+  inherited AfterConstruction;
+  fErrLines := TErrLines.Create;
+end;
+
+procedure TSessionForm.BeforeDestruction;
+begin
+  FreeAndNil(fErrLines);
+  inherited BeforeDestruction;
 end;
 
 end.
