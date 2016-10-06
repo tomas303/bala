@@ -36,7 +36,7 @@ type
     procedure FillEnvVariables(const AEnvVariables: IPersistMany); overload;
     procedure FillEnvVariables; overload;
     procedure AddBalaEnvVariables;
-    function SaveToTempFile(const ASource: string): string;
+    function SaveToTempFile(const ASource, AFileName: string): string;
   public
     procedure Bind;
     procedure PinIDE(const AParent: TWinControl);
@@ -185,12 +185,19 @@ begin
   ProcessRunner.AddEnvVariable('BALA_FILE', fBalaFile);
 end;
 
-function TContainer.SaveToTempFile(const ASource: string): string;
+function TContainer.SaveToTempFile(const ASource, AFileName: string): string;
 var
   mFS: TFileStream;
   mContent: UTF8String;
 begin
-  Result := GetTempFileName;
+  if AFileName <> '' then
+  begin
+     Result := IncludeTrailingPathDelimiter(GetTempDir) + AFileName;
+     if FileExists(Result) then
+       DeleteFile(Result);
+  end
+  else
+    Result := GetTempFileName;
   mFS := TFileStream.Create(Result, fmCreate);
   try
     if ASource <> '' then begin
@@ -234,7 +241,7 @@ begin
       ProcessRunner.Batch := fBalaSource;
     slSaveToFile:
       begin
-        fBalaFile := SaveToTempFile(Session.ItemByName['Source'].AsString);
+        fBalaFile := SaveToTempFile(Session.ItemByName['Source'].AsString, Session.ItemByName['FileName'].AsString);
       end;
   end;
   FillParameters;

@@ -28,6 +28,7 @@ type
     fSessionLinks: ISessionLinks;
     fPrefillCurrentEnvironment: Boolean;
     fScriptLaunch: TScriptLaunch;
+    fFileName: string;
   protected
     procedure SetID(const AValue: string);
   public
@@ -45,6 +46,7 @@ type
     property Parameters: IPersistManyTParameter read fParameters;
     property PrefillCurrentEnvironment: Boolean read fPrefillCurrentEnvironment write fPrefillCurrentEnvironment;
     property ScriptLaunch: TScriptLaunch read fScriptLaunch write fScriptLaunch;
+    property FileName: string read fFileName write fFileName;
   end;
 
 implementation

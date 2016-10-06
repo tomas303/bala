@@ -21,25 +21,25 @@ object SessionForm: TSessionForm
       Cursor = crVSplit
       Left = 1
       Height = 5
-      Top = 291
+      Top = 363
       Width = 660
       Align = alTop
       ResizeAnchor = akTop
     end
     object pnSource: TPanel
       Left = 1
-      Height = 290
+      Height = 362
       Top = 1
       Width = 660
       Align = alTop
       Caption = 'pnSource'
-      ClientHeight = 290
+      ClientHeight = 362
       ClientWidth = 660
       TabOrder = 1
       inline Source_bind: TSynEdit
         Left = 80
-        Height = 174
-        Top = 104
+        Height = 214
+        Top = 136
         Width = 570
         Anchors = [akTop, akLeft, akRight, akBottom]
         Font.Height = 13
@@ -48,7 +48,7 @@ object SessionForm: TSessionForm
         Font.Quality = fqNonAntialiased
         ParentColor = False
         ParentFont = False
-        TabOrder = 6
+        TabOrder = 7
         Gutter.Width = 57
         Gutter.MouseActions = <>
         RightGutter.Width = 0
@@ -539,9 +539,9 @@ object SessionForm: TSessionForm
         Left = 80
         Height = 23
         Top = 72
-        Width = 336
+        Width = 360
         Anchors = [akTop, akLeft, akRight]
-        TabOrder = 4
+        TabOrder = 2
         Text = 'Interpreter_bind'
       end
       object lblInterpreter: TLabel
@@ -555,7 +555,7 @@ object SessionForm: TSessionForm
       object lblSource: TLabel
         Left = 8
         Height = 15
-        Top = 104
+        Top = 136
         Width = 43
         Caption = 'Source'
         ParentColor = False
@@ -601,72 +601,85 @@ object SessionForm: TSessionForm
         Left = 80
         Height = 23
         Top = 40
-        Width = 176
+        Width = 568
         Anchors = [akTop, akLeft, akRight]
         TabOrder = 1
         Text = 'Name_bind'
       end
       object PrefillCurrentEnvironment_bind: TCheckBox
-        Left = 264
+        Left = 455
         Height = 21
-        Top = 40
+        Top = 104
         Width = 195
-        Anchors = [akTop, akRight]
         Caption = 'Prefill current env. variables'
-        TabOrder = 2
+        TabOrder = 6
       end
       object SourceHighLight_bind: TComboBox
-        Left = 550
+        Left = 528
         Height = 23
-        Top = 40
-        Width = 100
+        Top = 72
+        Width = 122
         Anchors = [akTop, akRight]
         ItemHeight = 15
         TabOrder = 3
         Text = 'SourceHighLight_bind'
       end
       object lblSourceHighLight: TLabel
-        Left = 477
+        Left = 456
         Height = 15
-        Top = 40
+        Top = 72
         Width = 68
         Anchors = [akTop, akRight]
         Caption = 'Highlighter'
         ParentColor = False
       end
       object lblScriptLaunch: TLabel
-        Left = 436
+        Left = 8
         Height = 15
-        Top = 72
+        Top = 104
         Width = 109
-        Anchors = [akTop, akRight]
         Caption = 'How launch script'
         ParentColor = False
       end
       object ScriptLaunch_bind: TComboBox
-        Left = 550
+        Left = 122
         Height = 23
-        Top = 72
-        Width = 100
-        Anchors = [akTop, akRight]
+        Top = 104
+        Width = 126
         ItemHeight = 15
-        TabOrder = 5
+        TabOrder = 4
         Text = 'ScriptLaunch_bind'
+      end
+      object lblFileName: TLabel
+        Left = 256
+        Height = 15
+        Top = 104
+        Width = 59
+        Caption = 'File name'
+        ParentColor = False
+      end
+      object FileName_bind: TEdit
+        Left = 320
+        Height = 23
+        Top = 104
+        Width = 120
+        TabOrder = 5
+        Text = 'FileName_bind'
       end
     end
     object pnOutput: TPanel
       Left = 1
-      Height = 244
-      Top = 296
+      Height = 172
+      Top = 368
       Width = 660
       Align = alClient
       Caption = 'pnOutput'
-      ClientHeight = 244
+      ClientHeight = 172
       ClientWidth = 660
       TabOrder = 2
       inline Output_bind: TSynEdit
         Left = 1
-        Height = 208
+        Height = 136
         Top = 35
         Width = 658
         Align = alClient
@@ -1278,7 +1291,7 @@ object SessionForm: TSessionForm
     Images = ilRun1
     OnUpdate = alRunUpdate
     left = 32
-    top = 232
+    top = 312
     object acStart: TAction
       Caption = 'Start'
       ImageIndex = 0
@@ -1313,7 +1326,7 @@ object SessionForm: TSessionForm
     Height = 32
     Width = 32
     left = 32
-    top = 176
+    top = 256
     Bitmap = {
       4C69030000002000000020000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
@@ -1704,7 +1717,7 @@ object SessionForm: TSessionForm
   end
   object ilRun1: TImageList
     left = 40
-    top = 120
+    top = 200
     Bitmap = {
       4C69040000001000000010000000000000000000000004733AFF2D8859FF859C
       90FF000000000000000000000000000000000000000000000000000000000000

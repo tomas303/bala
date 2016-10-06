@@ -23,8 +23,10 @@ type
     acAddOSVariables: TAction;
     alRun: TActionList;
     chkRollOutput: TCheckBox;
+    lblFileName: TLabel;
     lblSourceHighLight: TLabel;
     lblScriptLaunch: TLabel;
+    FileName_bind: TEdit;
     SourceHighLight_bind: TComboBox;
     EnvVariableGroups_bind: TStringGrid;
     EnvVariables_bind: TStringGrid;
@@ -104,6 +106,7 @@ type
   protected
     procedure ResetHighlighter(const AHighLightName: string);
     procedure SourceHighlighterDataChange(const ADataItem: IRBDataItem; AControl: TWinControl);
+    procedure ScriptLaunchDataChange(const ADataItem: IRBDataItem; AControl: TWinControl);
   protected
     procedure ScrollOutput;
   public
@@ -286,6 +289,7 @@ begin
   Binder.BindArea(Self, RunContainer.Session);
   Binder.RegisterChangeEvent('SourceHighLight', @SourceHighlighterDataChange);
   ResetHighlighter(Binder.Data.ItemByName['SourceHighLight'].AsString);
+  Binder.RegisterChangeEvent('ScriptLaunch', @ScriptLaunchDataChange);
 end;
 
 procedure TSessionForm.Flush;
@@ -371,6 +375,15 @@ procedure TSessionForm.SourceHighlighterDataChange(
   const ADataItem: IRBDataItem; AControl: TWinControl);
 begin
   ResetHighlighter(ADataItem.AsString);
+end;
+
+procedure TSessionForm.ScriptLaunchDataChange(const ADataItem: IRBDataItem;
+  AControl: TWinControl);
+var
+  mLaunch: TScriptLaunch;
+begin
+  mLaunch := TScriptLaunch(GetEnumValue(TypeInfo(TScriptLaunch), ADataItem.AsString));
+  FileName_bind.Enabled := mLaunch = slSaveToFile;
 end;
 
 procedure TSessionForm.ScrollOutput;
