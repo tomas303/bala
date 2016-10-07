@@ -20,7 +20,6 @@ type
     fInterpreter: string;
     fSource: TMemoString;
     fSourceHighLight: THighLight;
-    fOutput: TMemoString;
     fOutputHighLight: THighLight;
     fEnvVariableGroups: IPersistManyRefs<TEnvVariableGroup>;
     fEnvVariables: IPersistManyTEnvVariable;
@@ -39,7 +38,6 @@ type
     property Interpreter: string read fInterpreter write fInterpreter;
     property Source: TMemoString read fSource write fSource;
     property SourceHighLight: THighLight read fSourceHighLight write fSourceHighLight;
-    property Output: TMemoString read fOutput write fOutput;
     property OutputHighLight: THighLight read fOutputHighLight write fOutputHighLight;
     property EnvVariableGroups: IPersistManyRefs<TEnvVariableGroup> read fEnvVariableGroups;
     property EnvVariables: IPersistManyTEnvVariable read fEnvVariables;

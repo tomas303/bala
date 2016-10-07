@@ -44,7 +44,7 @@ type
     lblInterpreter: TLabel;
     lblName: TLabel;
     lblSource: TLabel;
-    Output_bind: TSynEdit;
+    seOutput: TSynEdit;
     pnOutput: TPanel;
     pnOutputInfo: TPanel;
     pnRun: TPanel;
@@ -76,7 +76,7 @@ type
     procedure btnTakeConfigurationClick(Sender: TObject);
     procedure btnTakeInterpreterClick(Sender: TObject);
     procedure btnTakeSourceClick(Sender: TObject);
-    procedure Output_bindSpecialLineColors(Sender: TObject; Line: integer;
+    procedure seOutputSpecialLineColors(Sender: TObject; Line: integer;
       var Special: boolean; var FG, BG: TColor);
   private
     fBinder: IRBDataBinder;
@@ -132,7 +132,7 @@ implementation
 procedure TSessionForm.acStartExecute(Sender: TObject);
 begin
   fErrLines.Clear;
-  Output_bind.Clear;
+  seOutput.Clear;
   edExitCode.Text := '';
   edExitCode.Color := clWhite;
   tbPause.Action := acPause;
@@ -154,7 +154,7 @@ begin
   Source_bind.ReadOnly := RunContainer.State in [rsRun, rsPause];
   EnvVariables_bind.Enabled := RunContainer.State in [rsNone];
   Parameters_bind.Enabled := RunContainer.State in [rsNone];
-  Output_bind.ReadOnly := True;
+  seOutput.ReadOnly := True;
 end;
 
 procedure TSessionForm.btnReturnConfigurationClick(Sender: TObject);
@@ -211,7 +211,7 @@ begin
   Binder.DataChange;
 end;
 
-procedure TSessionForm.Output_bindSpecialLineColors(Sender: TObject;
+procedure TSessionForm.seOutputSpecialLineColors(Sender: TObject;
   Line: integer; var Special: boolean; var FG, BG: TColor);
 begin
   if fErrLines.IndexOf(Line) > -1 then begin
@@ -249,16 +249,16 @@ end;
 
 procedure TSessionForm.PushOutput(const AData: string);
 begin
-  Output_bind.Lines.Add(AData);
-  Binder.Flush(Output_bind);
+  seOutput.Lines.Add(AData);
+  Binder.Flush(seOutput);
   ScrollOutput;
 end;
 
 procedure TSessionForm.PushErrOutput(const AData: string);
 begin
-  Output_bind.Lines.Add(AData);
-  fErrLines.Add(Output_bind.Lines.Count);
-  Binder.Flush(Output_bind);
+  seOutput.Lines.Add(AData);
+  fErrLines.Add(seOutput.Lines.Count);
+  Binder.Flush(seOutput);
   ScrollOutput;
 end;
 
@@ -294,7 +294,7 @@ end;
 
 procedure TSessionForm.Flush;
 begin
-  Output_bind.Clear;
+  seOutput.Clear;
   Binder.Flush;
 end;
 
@@ -336,6 +336,7 @@ begin
   if mSessionSetting.ItemByName['SplitterOutputPos'].AsInteger > 0 then
     splOutput.SetSplitterPosition(mSessionSetting.ItemByName['SplitterOutputPos'].AsInteger);
   chkRollOutput.Checked := mSessionSetting.ItemByName['RollOutput'].AsBoolean;
+  seOutput.Lines.Text := mSessionSetting.ItemByName['Output'].AsString;
 end;
 
 procedure TSessionForm.SaveSettings;
@@ -349,6 +350,7 @@ begin
   mSessionSetting.ItemByName['SplitterMainPos'].AsInteger := splMain.GetSplitterPosition;
   mSessionSetting.ItemByName['SplitterOutputPos'].AsInteger := splOutput.GetSplitterPosition;
   mSessionSetting.ItemByName['RollOutput'].AsBoolean := chkRollOutput.Checked;
+  mSessionSetting.ItemByName['Output'].AsString := seOutput.Lines.Text;
 end;
 
 procedure TSessionForm.ResetHighlighter(const AHighLightName: string);
@@ -394,7 +396,7 @@ begin
   if chkRollOutput.Checked then begin
     mMsgScroll.Msg := LM_VSCROLL;
     mMsgScroll.ScrollCode := SB_BOTTOM;
-    Output_bind.WndProc(mMsg);
+    seOutput.WndProc(mMsg);
   end;
 end;
 
