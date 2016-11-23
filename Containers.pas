@@ -11,7 +11,7 @@ type
 
   TRunState = (rsNone, rsRun, rsPause);
 
-  TScriptLaunch = (slNothing, slSentToInput, slSaveToFile);
+  TScriptLaunch = (slSentToInput, slSaveToFile);
 
   { IContainer }
 
