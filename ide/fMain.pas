@@ -6,8 +6,8 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, ActnList,
-  Menus, ComCtrls, ExtCtrls, StdCtrls, tvl_iedit, tvl_ibindings, trl_ipersist,
-  trl_irttibroker, trl_idifactory, Containers, SettingsBroker;
+  Menus, ComCtrls, ExtCtrls, StdCtrls, tal_iedit, tvl_ibindings, trl_ipersist,
+  trl_irttibroker, trl_idifactory, Containers, SettingsBroker, tal_ilauncher;
 
 type
 

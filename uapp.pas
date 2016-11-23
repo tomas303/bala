@@ -5,55 +5,47 @@ unit uapp;
 interface
 
 uses
-  Classes, SysUtils, tvl_uapplaunch,
-  forms,
-  fMain,
-  Controls,
+  forms, fMain,
+  tal_uapp, tal_ilauncher, tal_uguilauncher,
   trl_idifactory, trl_udifactory,
-  trl_ipersist,  trl_upersist, trl_upersiststore,
+  trl_ipersist, trl_upersiststore,
   trl_dicontainer,
   trl_irttibroker, trl_urttibroker,
   trl_upersistxml,
   trl_processrunner,
-  tvl_udatabinder, tvl_udatabinders, tvl_utallybinders,
-  tvl_ibindings, tvl_iedit, tvl_ubehavebinder,
-  tvl_SimpleListForm,
+  tvl_udatabinder, tvl_utallybinders,
+  tvl_ibindings, tal_iedit, tvl_ubehavebinder,
+  tal_SimpleListForm,
   uParameters, uEnvVariables, fEnvVariableGroup,
   uContainers, Containers, fSession, uSessions,
   uSettings, SettingsBroker, uSettingsBroker,
   OsUtils, uOsUtils;
+
 type
 
-  { TKicker }
+  { TAppGUILauncher }
 
-  TKicker = class(TInterfacedObject, IGUIKicker)
-  private
-    fMainForm: IMainForm;
+  TAppGUILauncher = class(TGUILauncher)
+  protected
     fStore: IPersistStore;
     fSettingsBroker: ISettingsBroker;
-  protected
-    //IGUIKicker
-    procedure StartUp;
-    procedure ShutDown;
-    function GetMainForm: IMainForm;
-  protected
     procedure LoadSettings;
     procedure SaveSettings;
+  protected
+    procedure BeforeLaunch; override;
+    procedure AfterLaunch; override;
   published
-    property MainForm: IMainForm read fMainForm write fMainForm;
     property Store: IPersistStore read fStore write fStore;
     property SettingsBroker: ISettingsBroker read fSettingsBroker write fSettingsBroker;
   end;
 
   { TApp }
 
-  TApp = class
+  TApp = class(TALApp)
   public const
     cAppID = 'APP';
     cPersistID = 'PERSIST';
   private
-    fDIC: TDIContainer;
-    fDataFile: string;
     function GetAppDIC: TDIContainer;
     function GetPersistDIC: TDIContainer;
   protected
@@ -62,52 +54,20 @@ type
   protected
     function CreateMainFormInstance: TObject;
   protected
-    procedure InjectPersistRef(const AItem: IRBDataItem);
-    procedure Setup;
-    procedure RegisterDataClass(ADIC: TDIContainer; AClass: TClass);
     procedure RegisterCore;
     procedure RegisterPersist;
     procedure RegisterGUI;
     procedure RegisterIDE;
     procedure RegisterRtl;
     procedure RegisterRunContainer;
-    procedure RegisterServices;
-    procedure Launch;
-  protected
-    procedure DockMasterCreateControl(Sender: TObject; aName: string; var
-      AControl: TControl; DoDisableAutoSizing: boolean);
-  public
-    constructor Create;
-    destructor Destroy; override;
-    class procedure Go;
+    procedure RegisterAppServices; override;
   end;
 
 implementation
 
-{ TKicker }
+{ TAppGUILauncher }
 
-procedure TKicker.StartUp;
-begin
-  Store.Open;
-  LoadSettings;
-  fMainForm.StartUp;
-end;
-
-procedure TKicker.ShutDown;
-begin
-  fMainForm.ShutDown;
-  SaveSettings;
-  Store.Close;
-  fMainForm := nil;  //otherwisw AV - this is not automaticly freed interface object
-  Store := nil;
-end;
-
-function TKicker.GetMainForm: IMainForm;
-begin
-  Result := fMainForm;
-end;
-
-procedure TKicker.LoadSettings;
+procedure TAppGUILauncher.LoadSettings;
 var
   m: IPersistRefList;
 begin
@@ -119,80 +79,40 @@ begin
   end;
 end;
 
-
-procedure TKicker.SaveSettings;
+procedure TAppGUILauncher.SaveSettings;
 begin
   Store.Save(SettingsBroker.AppSetting);
+end;
+
+procedure TAppGUILauncher.BeforeLaunch;
+begin
+  inherited BeforeLaunch;
+  Store.Open;
+  LoadSettings;
+end;
+
+procedure TAppGUILauncher.AfterLaunch;
+begin
+  SaveSettings;
+  Store.Close;
+  inherited AfterLaunch;
 end;
 
 { TApp }
 
 function TApp.GetAppDIC: TDIContainer;
 begin
-  Result := fDIC.Locate(TDIContainer, cAppID);
+  Result := DIC.Locate(TDIContainer, cAppID);
 end;
 
 function TApp.GetPersistDIC: TDIContainer;
 begin
-  Result := fDIC.Locate(TDIContainer, cPersistID);
+  Result := DIC.Locate(TDIContainer, cPersistID);
 end;
 
 function TApp.CreateMainFormInstance: TObject;
 begin
   Application.CreateForm(TMainForm, Result);
-end;
-
-procedure TApp.InjectPersistRef(const AItem: IRBDataItem);
-begin
-  if AItem.IsInterface and Supports(AItem.AsInterface, IPersistRef) then
-  begin
-    // IPersistRef need resolve data via Store
-    (AItem.AsInterface as IPersistRef).Store := PersistDIC.Locate(IPersistStore);
-  end
-  else
-  if AItem.IsInterface and Supports(AItem.AsInterface, IPersistManyRefs) then
-  begin
-    // need to create IPersistRef members
-    (AItem.AsInterface as IPersistManyRefs).Factory := PersistDIC.Locate(IPersistFactory, cPersistID);
-  end;
-end;
-
-procedure TApp.Setup;
-var
-  mAppDir, mSubdir, mExt: string;
-begin
-  if Paramcount > 0 then
-    mAppDir := ParamStr(1)
-  else
-  begin
-    mSubdir := '.' + ExtractFileName(ParamStr(0));
-    mExt := ExtractFileExt(ParamStr(0));
-    mSubDir := copy(mSubDir, 1, Length(mSubdir) - Length(mExt));
-    {$IFDEF UNIX}
-    mAppDir := GetEnvironmentVariable('HOME') + PathDelim + mSubdir + PathDelim;
-    {$ENDIF UNIX}
-    {$IFDEF WINDOWS}
-    mAppDir := GetEnvironmentVariable('APPDATA') + PathDelim + mSubdir + PathDelim;
-    {$ENDIF WINDOWS}
-  end;
-  if not DirectoryExists(mAppDir) then
-  begin
-    if not ForceDirectories(mAppDir) then
-      raise Exception.Create('Cannot create directory ' + mAppDir);
-  end;
-  fDataFile := mAppDir + 'data.xml';
-end;
-
-procedure TApp.RegisterDataClass(ADIC: TDIContainer; AClass: TClass);
-var
-  mReg: TDIReg;
-begin
-  // persist class
-  mReg := ADIC.Add(AClass);
-  mReg.InjectProp('', InjectPersistRef);
-  // data envelop for persist class
-  mReg := ADIC.Add(TRBData, IRBData, AClass.ClassName);
-  mReg.InjectProp('UnderObject', AClass);
 end;
 
 procedure TApp.RegisterGUI;
@@ -201,11 +121,8 @@ var
 begin
   mReg := AppDIC.Add(TRBBehavioralBinder, IRBBehavioralBinder);
   //
-  mReg := AppDIC.Add(TGUILauncher, '', ckSingle);
-  mReg.InjectProp('Kicker', IGUIKicker);
-  //
-  mReg := AppDIC.Add(TKicker, IGUIKicker);
-  mReg.InjectProp('MainForm', IMainForm);
+  mReg := DIC.Add(TAppGUILauncher, ILauncher);
+  mReg.InjectProp('MainForm', IMainForm, '', AppDIC);
   mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
   mReg.InjectProp('SettingsBroker', ISettingsBroker, '', AppDIC);
 end;
@@ -217,15 +134,15 @@ begin
   mReg := AppDIC.Add(CreateMainFormInstance, IMainForm);
   mReg.InjectProp('Containers', IContainers);
   mReg.InjectProp('SessionsBinder', IRBTallyBinder, 'sessions', PersistDIC);
-  mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
+  mReg.InjectProp('Factory', IPersistFactory, '', PersistDIC);
   mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
-  mReg.InjectProp('AppFactory', IDIFactory, '', fDIC);
+  mReg.InjectProp('AppFactory', IDIFactory, '', DIC);
   mReg.InjectProp('EnvVariableGroups', IListData, 'EnvVariableGroupsForm');
   mReg.InjectProp('SettingsBroker', ISettingsBroker, '', AppDIC);
   //
   mReg := AppDIC.Add(TSimpleListForm, AppDIC.Locate(TDIOwner), IListData, 'EnvVariableGroupsForm');
   mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
-  mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
+  mReg.InjectProp('Factory', IPersistFactory, '', PersistDIC);
   mReg.InjectProp('Binder', IRBTallyBinder, 'listbox', PersistDIC);
   mReg.InjectProp('Edit', IEditData, 'EnvVariableGroupForm');
   mReg.InjectProp('DataClass', TEnvVariableGroup.ClassName);
@@ -261,13 +178,13 @@ begin
   mReg.InjectProp('Binder', IRBDataBinder, '', PersistDIC);
   mReg.InjectProp('BehaveBinder', IRBBehavioralBinder);
   mReg.InjectProp('SessionsBinder', IRBTallyBinder, 'sessions', PersistDIC);
-  mReg.InjectProp('Factory', IPersistFactory, cPersistID, PersistDIC);
+  mReg.InjectProp('Factory', IPersistFactory, '', PersistDIC);
   mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
   mReg.InjectProp('OsUtils', IOsUtils);
   mReg.InjectProp('SettingsBroker', ISettingsBroker, '', AppDIC);
   //
   mReg := AppDIC.Add(TContainers, IContainers);
-  mReg.InjectProp('AppFactory', IDIFactory, '', fDIC);
+  mReg.InjectProp('AppFactory', IDIFactory, '', DIC);
   mReg.InjectProp('Store', IPersistStore, '', PersistDIC);
 end;
 
@@ -298,25 +215,25 @@ begin
   mReg := PersistDIC.Add(TStoreCache);
   //
   mReg := PersistDIC.Add(TPersistStore, IPersistStore, '', ckSingle);
-  mReg.InjectProp('Factory', IPersistFactory, cPersistID);
+  mReg.InjectProp('Factory', IPersistFactory);
   mReg.InjectProp('Device', IPersistStoreDevice, 'xml');
   mReg.InjectProp('Cache', TStoreCache);
   //
   mReg := PersistDIC.Add(TXmlStore, IPersistStoreDevice, 'xml');
-  mReg.InjectProp('XMLFile', fDataFile);
-  mReg.InjectProp('Factory', IPersistFactory, cPersistID);
+  mReg.InjectProp('XMLFile', DataFile);
+  mReg.InjectProp('Factory', IPersistFactory);
   // binders(conection between data and GUI)
   mReg := PersistDIC.Add(TListBoxBinder, IRBTallyBinder, 'listbox');
   mReg.InjectProp('Store', IPersistStore);
-  mReg.InjectProp('Factory', IPersistFactory, cPersistID);
+  mReg.InjectProp('Factory', IPersistFactory);
   //
   mReg := PersistDIC.Add(TDrawGridBinder, IRBTallyBinder, 'drawgrid');
   mReg.InjectProp('Store', IPersistStore);
-  mReg.InjectProp('Factory', IPersistFactory, cPersistID);
+  mReg.InjectProp('Factory', IPersistFactory);
   //
   mReg := PersistDIC.Add(TListBoxBinder, IRBTallyBinder, 'sessions', ckSingle);
   mReg.InjectProp('Store', IPersistStore);
-  mReg.InjectProp('Factory', IPersistFactory, cPersistID);
+  mReg.InjectProp('Factory', IPersistFactory);
   //
   mReg := PersistDIC.Add(TRBDataBinder, IRBDataBinder);
 end;
@@ -326,66 +243,28 @@ var
   mReg: TDIReg;
 begin
   // application container
-  mReg := fDIC.Add(TDIContainer, cAppID, ckSingle);
+  mReg := DIC.Add(TDIContainer, cAppID, ckSingle);
   // persist container
-  mReg := fDIC.Add(TDIContainer, cPersistID, ckSingle);
+  mReg := DIC.Add(TDIContainer, cPersistID, ckSingle);
   // main DI factory
-  mReg := fDIC.Add(TDIFactory, IDIFactory);
-  mReg.InjectProp('Container', TDIContainer, cAppID, fDIC);
+  mReg := DIC.Add(TDIFactory, IDIFactory);
+  mReg.InjectProp('Container', TDIContainer, cAppID, DIC);
   // factory for persist data
-  mReg := PersistDIC.Add(TPersistFactory, IPersistFactory, cPersistID, ckSingle);
-  mReg.InjectProp('Container', TDIContainer, cPersistID, fDIC);
+  mReg := PersistDIC.Add(TPersistFactory, IPersistFactory, '', ckSingle);
+  mReg.InjectProp('Container', TDIContainer, cPersistID, DIC);
   // owner of interface object without release(clear interfaces on destroy)
   mReg := AppDIC.Add(TDIOwner, '', ckSingle);
 end;
 
-procedure TApp.RegisterServices;
+procedure TApp.RegisterAppServices;
 begin
+  inherited RegisterAppServices;
   RegisterCore;
   RegisterRtl;
   RegisterPersist;
   RegisterGUI;
   RegisterIDE;
   RegisterRunContainer;
-end;
-
-procedure TApp.Launch;
-var
-  mGUILauncher: TGUILauncher;
-begin
-  mGUILauncher := AppDIC.Locate(TGUILauncher);
-  mGUILauncher.Launch;
-end;
-
-procedure TApp.DockMasterCreateControl(Sender: TObject; aName: string;
-  var AControl: TControl; DoDisableAutoSizing: boolean);
-begin
-
-end;
-
-constructor TApp.Create;
-begin
-  fDIC := TDIContainer.Create;
-end;
-
-destructor TApp.Destroy;
-begin
-  FreeAndNil(fDIC);
-  inherited Destroy;
-end;
-
-class procedure TApp.Go;
-var
-  mApp: TApp;
-begin
-  mApp := TApp.Create;
-  try
-    mApp.Setup;
-    mApp.RegisterServices;
-    mApp.Launch;
-  finally
-    mApp.Free;
-  end;
 end;
 
 end.

@@ -132,19 +132,22 @@
         <CommandLineParams Value="/mnt/projects/sources/bala/testfile/"/>
       </local>
     </RunParams>
-    <RequiredPackages Count="4">
+    <RequiredPackages Count="5">
       <Item1>
-        <PackageName Value="tvl"/>
+        <PackageName Value="tal"/>
       </Item1>
       <Item2>
-        <PackageName Value="trl"/>
+        <PackageName Value="tvl"/>
       </Item2>
       <Item3>
-        <PackageName Value="SynEdit"/>
+        <PackageName Value="trl"/>
       </Item3>
       <Item4>
-        <PackageName Value="LCL"/>
+        <PackageName Value="SynEdit"/>
       </Item4>
+      <Item5>
+        <PackageName Value="LCL"/>
+      </Item5>
     </RequiredPackages>
     <Units Count="18">
       <Unit0>

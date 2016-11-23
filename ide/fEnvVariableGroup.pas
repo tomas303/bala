@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
-  Grids, Buttons, tvl_iedit, tvl_ibindings, OsUtils, trl_irttibroker;
+  Grids, Buttons, tal_iedit, tvl_ibindings, OsUtils, trl_irttibroker;
 
 type
 
