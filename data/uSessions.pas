@@ -16,7 +16,7 @@ type
   TSession = class
   private
     fName: string;
-    fID: string;
+    fID: TIDString;
     fInterpreter: string;
     fSource: TMemoString;
     fSourceHighLight: THighLight;
@@ -28,13 +28,11 @@ type
     fPrefillCurrentEnvironment: Boolean;
     fScriptLaunch: TScriptLaunch;
     fFileName: string;
-  protected
-    procedure SetID(const AValue: string);
   public
     procedure AfterConstruction; override;
   published
     property Name: string read fName write fName;
-    property ID: string read fID write SetID;
+    property ID: TIDString read fID write fID;
     property Interpreter: string read fInterpreter write fInterpreter;
     property Source: TMemoString read fSource write fSource;
     property SourceHighLight: THighLight read fSourceHighLight write fSourceHighLight;
@@ -52,21 +50,11 @@ implementation
 { TSession }
 
 procedure TSession.AfterConstruction;
-var
-  mGuid: TGuid;
 begin
   inherited AfterConstruction;
-  CreateGUID(mGuid);
-  fID := GUIDToString(mGuid);
   fEnvVariableGroups := TPersistManyRefs<TEnvVariableGroup>.Create;
   fEnvVariables := TPersistManyTEnvVariable.Create;
   fParameters := TPersistManyTParameter.Create;
-end;
-
-procedure TSession.SetID(const AValue: string);
-begin
-  if AValue <> '' then
-    fID := AValue;
 end;
 
 end.
