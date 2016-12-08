@@ -38,6 +38,7 @@ type
     procedure AddBalaEnvVariables;
     function SaveToTempFile(const ASource, AFileName: string): string;
   public
+    destructor Destroy; override;
     procedure Bind;
     procedure PinIDE(const AParent: TWinControl);
     procedure Start;
@@ -209,6 +210,12 @@ begin
   end;
 end;
 
+destructor TContainer.Destroy;
+begin
+  FreeAndNil(fProcessRunner);
+  inherited Destroy;
+end;
+
 procedure TContainer.Bind;
 begin
   if SessionIDE <> nil then
@@ -268,6 +275,10 @@ end;
 procedure TContainer.ShutDown;
 begin
   SessionIDE.ShutDown;
+  // necessary - SessionIDE is not ref. counted(TComponent descendant), so
+  // when this object will destroy, in SessionIDE can be reference to no longer
+  // exists object
+  SessionIDE := nil;
 end;
 
 { TContainers }
