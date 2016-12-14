@@ -7,8 +7,9 @@ interface
 uses
   Classes, SysUtils, FileUtil, SynEdit, Forms, Controls, Graphics, Dialogs,
   StdCtrls, Menus, ExtCtrls, ActnList, ComCtrls, Grids, tvl_ibindings,
-  Containers, Sessions, trl_ipersist, OsUtils, SettingsBroker, trl_irttibroker,
-  iBala, uHighLight, SynEditHighlighter, typinfo, LMessages, LCLType, fgl, SynEditMarkupSpecialLine;
+  Containers, Sessions, trl_ipersist, OsUtils, trl_irttibroker,
+  iBala, uHighLight, SynEditHighlighter, typinfo, LMessages, LCLType, fgl, SynEditMarkupSpecialLine,
+  tal_ihistorysettings;
 
 type
 
@@ -27,6 +28,7 @@ type
     lblSourceHighLight: TLabel;
     lblScriptLaunch: TLabel;
     FileName_bind: TEdit;
+    pnMain: TPanel;
     SourceHighLight_bind: TComboBox;
     EnvVariableGroups_bind: TStringGrid;
     EnvVariables_bind: TStringGrid;
@@ -86,12 +88,13 @@ type
     fFactory: IPersistFactory;
     fStore: IPersistStore;
     fOsUtils: IOsUtils;
-    fSettingsBroker: ISettingsBroker;
+    fHistorySettings: IHistorySettings;
   private type
     TErrLines = specialize TFPGList<integer>;
   private
     fErrLines: TErrLines;
   protected
+    function CorrectIDToName(AComp: TComponent; const AID: string): string;
     procedure PushOutput(const AData: string);
     procedure PushErrOutput(const AData: string);
     procedure PushExitCode(const AExitCode: integer);
@@ -101,8 +104,6 @@ type
     procedure ShutDown;
   protected
     function GetSessionSetting(const ASessionSettings: IPersistMany; const AID: string): IRBData;
-    procedure LoadSettings;
-    procedure SaveSettings;
   protected
     procedure ResetHighlighter(const AHighLightName: string);
     procedure SourceHighlighterDataChange(const ADataItem: IRBDataItem; AControl: TWinControl);
@@ -120,7 +121,7 @@ type
     property Factory: IPersistFactory read fFactory write fFactory;
     property Store: IPersistStore read fStore write fStore;
     property OsUtils: IOsUtils read fOsUtils write fOsUtils;
-    property SettingsBroker: ISettingsBroker read fSettingsBroker write fSettingsBroker;
+    property HistorySettings: IHistorySettings read fHistorySettings write fHistorySettings;
   end;
 
 implementation
@@ -220,6 +221,20 @@ begin
   end;
 end;
 
+function TSessionForm.CorrectIDToName(AComp: TComponent; const AID: string): string;
+var
+  i: integer;
+begin
+  Result := AID;
+  for i := 1 to Length(AID) do
+    case AID[i] of
+      '0'..'9','a'..'z', 'A'..'Z', '_':;
+    else
+      Result[i] := '_';
+    end;
+  Result := AComp.Name + '_' + Result;
+end;
+
 procedure TSessionForm.acPauseExecute(Sender: TObject);
 begin
   RunContainer.Pause;
@@ -272,14 +287,17 @@ begin
 end;
 
 procedure TSessionForm.Pin(const AParent: TWinControl);
+var
+  mPanel: TPanel;
 begin
-  while ControlCount > 0 do
-  begin
-    Controls[ControlCount - 1].Tag:=-1;
-    Controls[ControlCount - 1].Parent := AParent;
-  end;
+  pnMain.Parent := AParent;
   Binder.BindControl(AParent, 'Name');
-  LoadSettings;
+  mPanel := pnOutput;
+  pnOutput.Name := CorrectIDToName(pnOutput, Binder.Data.ItemByName['ID'].AsString);
+  pnOutput := mPanel;  // TComponent.SetName nil the reference of OldName - quit unexpected behavior
+  HistorySettings.Load(pnOutput);
+  HistorySettings.Load(splMain);
+  HistorySettings.Load(splOutput);
 end;
 
 procedure TSessionForm.Bind(const AContainer: IContainer);
@@ -301,7 +319,9 @@ end;
 procedure TSessionForm.ShutDown;
 begin
   Binder.UnregisterChangeEvent('SourceHighLight', @SourceHighlighterDataChange);
-  SaveSettings;
+  HistorySettings.Save(pnOutput);
+  HistorySettings.Save(splMain);
+  HistorySettings.Save(splOutput);
 end;
 
 function TSessionForm.GetSessionSetting(const ASessionSettings: IPersistMany;
@@ -309,6 +329,7 @@ function TSessionForm.GetSessionSetting(const ASessionSettings: IPersistMany;
 var
   i: integer;
 begin
+  seOutput.Lines;
   Result := nil;
   for i := 0 to ASessionSettings.Count - 1 do begin
     if ASessionSettings.AsPersistData[i].ItemByName['SessionID'].AsString = AID then
@@ -320,37 +341,6 @@ begin
   ASessionSettings.Count := ASessionSettings.Count + 1;
   Result := ASessionSettings.AsPersistData[ASessionSettings.Count - 1];
   Result.ItemByName['SessionID'].AsString := AID;
-end;
-
-procedure TSessionForm.LoadSettings;
-var
-  mSessionSettings: IPersistMany;
-  mSessionSetting: IRBData;
-begin
-  mSessionSettings := SettingsBroker.AppSetting.ItemByName['SessionIdeSettings'].AsInterface as IPersistMany;
-  mSessionSetting := GetSessionSetting(mSessionSettings, RunContainer.Session.ItemByName['ID'].AsString);
-  if mSessionSetting.ItemByName['SplitterEnvironmentPos'].AsInteger > 0 then
-    splEnvironment.SetSplitterPosition(mSessionSetting.ItemByName['SplitterEnvironmentPos'].AsInteger);
-  if mSessionSetting.ItemByName['SplitterMainPos'].AsInteger > 0 then
-    splMain.SetSplitterPosition(mSessionSetting.ItemByName['SplitterMainPos'].AsInteger);
-  if mSessionSetting.ItemByName['SplitterOutputPos'].AsInteger > 0 then
-    splOutput.SetSplitterPosition(mSessionSetting.ItemByName['SplitterOutputPos'].AsInteger);
-  chkRollOutput.Checked := mSessionSetting.ItemByName['RollOutput'].AsBoolean;
-  seOutput.Lines.Text := mSessionSetting.ItemByName['Output'].AsString;
-end;
-
-procedure TSessionForm.SaveSettings;
-var
-  mSessionSettings: IPersistMany;
-  mSessionSetting: IRBData;
-begin
-  mSessionSettings := SettingsBroker.AppSetting.ItemByName['SessionIdeSettings'].AsInterface as IPersistMany;
-  mSessionSetting := GetSessionSetting(mSessionSettings, RunContainer.Session.ItemByName['ID'].AsString);
-  mSessionSetting.ItemByName['SplitterEnvironmentPos'].AsInteger := splEnvironment.GetSplitterPosition;
-  mSessionSetting.ItemByName['SplitterMainPos'].AsInteger := splMain.GetSplitterPosition;
-  mSessionSetting.ItemByName['SplitterOutputPos'].AsInteger := splOutput.GetSplitterPosition;
-  mSessionSetting.ItemByName['RollOutput'].AsBoolean := chkRollOutput.Checked;
-  mSessionSetting.ItemByName['Output'].AsString := seOutput.Lines.Text;
 end;
 
 procedure TSessionForm.ResetHighlighter(const AHighLightName: string);

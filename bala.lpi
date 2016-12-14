@@ -149,7 +149,7 @@
         <PackageName Value="LCL"/>
       </Item5>
     </RequiredPackages>
-    <Units Count="18">
+    <Units Count="15">
       <Unit0>
         <Filename Value="bala.lpr"/>
         <IsPartOfProject Value="True"/>
@@ -212,25 +212,13 @@
         <IsPartOfProject Value="True"/>
       </Unit12>
       <Unit13>
-        <Filename Value="data/uSettings.pas"/>
+        <Filename Value="iBala.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit13>
       <Unit14>
-        <Filename Value="SettingsBroker.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit14>
-      <Unit15>
-        <Filename Value="uSettingsBroker.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit15>
-      <Unit16>
-        <Filename Value="iBala.pas"/>
-        <IsPartOfProject Value="True"/>
-      </Unit16>
-      <Unit17>
         <Filename Value="uHighLight.pas"/>
         <IsPartOfProject Value="True"/>
-      </Unit17>
+      </Unit14>
     </Units>
   </ProjectOptions>
   <CompilerOptions>
