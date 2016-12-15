@@ -287,17 +287,12 @@ begin
 end;
 
 procedure TSessionForm.Pin(const AParent: TWinControl);
-var
-  mPanel: TPanel;
 begin
   pnMain.Parent := AParent;
   Binder.BindControl(AParent, 'Name');
-  mPanel := pnOutput;
-  pnOutput.Name := CorrectIDToName(pnOutput, Binder.Data.ItemByName['ID'].AsString);
-  pnOutput := mPanel;  // TComponent.SetName nil the reference of OldName - quit unexpected behavior
-  HistorySettings.Load(pnOutput);
-  HistorySettings.Load(splMain);
-  HistorySettings.Load(splOutput);
+  HistorySettings.Load(pnOutput, Binder.Data.ItemByName['ID'].AsString);
+  HistorySettings.Load(splMain, Binder.Data.ItemByName['ID'].AsString);
+  HistorySettings.Load(splOutput, Binder.Data.ItemByName['ID'].AsString);
 end;
 
 procedure TSessionForm.Bind(const AContainer: IContainer);
@@ -319,9 +314,9 @@ end;
 procedure TSessionForm.ShutDown;
 begin
   Binder.UnregisterChangeEvent('SourceHighLight', @SourceHighlighterDataChange);
-  HistorySettings.Save(pnOutput);
-  HistorySettings.Save(splMain);
-  HistorySettings.Save(splOutput);
+  HistorySettings.Save(pnOutput, Binder.Data.ItemByName['ID'].AsString);
+  HistorySettings.Save(splMain, Binder.Data.ItemByName['ID'].AsString);
+  HistorySettings.Save(splOutput, Binder.Data.ItemByName['ID'].AsString);
 end;
 
 function TSessionForm.GetSessionSetting(const ASessionSettings: IPersistMany;
